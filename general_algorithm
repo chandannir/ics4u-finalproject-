@@ -1,0 +1,34 @@
+Prompts the user to either login, signup or quit
+- Quit closes the program
+
+When signup is chosen:
+- User is prompted to provide a nonexistent username and password that is saved for future logins
+
+When login is chosen: 
+- User is prompted to provide an existing username and password 
+- If failed user is reprompted or redirected to signup
+- If successful user is directed to the projects page
+
+User can pick among existing projects linked to the user and a new project button
+- If no projects exist they are not shown
+- If new project is clicked, user is redirected to the circuit screen as long as the user does not exceed 5 current projects 
+
+User is given an empty circuit diagram: 
+- Users can place components using the add button (battery, wire, led, resistor) on the plane and attach other components together. 
+- Once the circuit hits the requirements (closed, has a power source, etc.. ) a display will pop up with the voltage, current, resistance and power in the circuit. 
+
+Clicking on a Component: 
+- User is shown a menu where they can change the components characteristics (specific to that component) 
+- Most components can change name, colour, and resistance. 
+- Ex. Changing the resistance of a potentiometer. 
+
+Deleting a component:
+- In the component menu, the users are able to delete the component from their circuit, doing so deletes the component and leaves the circuit open. 
+
+
+Finishing the Circuit:
+- Once the circuit is done, users can press the finish button and save the circuit to be able to view it upon the next login.
+- Returns user to the projects screen  
+- The circuit cannot be saved if it is not closed 
+- Reprompts user to close the circuit
+
