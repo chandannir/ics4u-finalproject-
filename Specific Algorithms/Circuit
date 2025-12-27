@@ -1,1 +1,23 @@
+abstract Circuit class
+	Initialize attributes
+    -components as a ArrayList<Component>
+    -state as a boolean
+
+  public void addComponent(Component item, Vector point1, Vector point2)
+    -Add the corresponding item at the midway position between point1 and point2 (set the position of item)
+      -The component would be facing towards point2 (negative end)
+    -item gets added to the “components” attribute
+    -Calls checkState()
+  public void removeComponent(Component item)
+    -Deletes the item from the circuit, leaving an empty spot in the circuit
+    -Remove item from “components” attribute
+    -Calls checkState()
+  public void finishCircuit()
+    -Loops through each item in the circuit to make sure every component is interconnected (there will be grid points set up as Vectors throughout the board to check if components are connected)
+      -If the circuit is not all connected, add a wire at the spot that needs a connection
+    -Calls checkState()
+  public boolean checkState()
+    -Loops through each item to find either an open switch or a component not connected to anything
+      -If either is found, return false
+      -else, return true
 
