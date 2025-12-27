@@ -1,1 +1,7 @@
+	
+User class in Aggregation with Circuit
+	-Use a constructor to initialize attributes
+    -name as a String
+    -password as a String
+    -projects as an ArrayList<Circuit>
 
