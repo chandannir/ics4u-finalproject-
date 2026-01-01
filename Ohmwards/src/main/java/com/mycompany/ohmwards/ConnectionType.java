@@ -8,6 +8,6 @@ package com.mycompany.ohmwards;
  *
  * @author Cameron
  */
-public class ConnectionType {
-    
+public enum ConnectionType {
+    RESISTOR, POWERSOURCE, WIRE, MODULE, SWITCH;
 }

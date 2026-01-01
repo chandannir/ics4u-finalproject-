@@ -3,11 +3,36 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.ohmwards;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  *
  * @author Cameron
  */
 public class Circuit {
+    private ArrayList<Component> components;
+    private boolean state;
     
+    public Circuit(ArrayList<Component> comps, boolean state){
+        components = comps;
+        this.state = state;
+    }
+    
+    public void addComponent(Component comp, Vector<Double> pos1, Vector<Double> pos2){
+        // Add Code Here (add a comp to components list and set position to midpoint of pos1 and pos2)
+    }
+    
+    public void removeComponent(Component comp){
+        // Remove comp from ArrayList and delete component from screen
+    }
+    
+    public void finishCircuit(){
+        // Check for missing wires and add if needed
+    }
+    
+    public boolean checkState(){
+        // Look through circuit and check if the circuit is open or closed
+        return true;
+    }
 }

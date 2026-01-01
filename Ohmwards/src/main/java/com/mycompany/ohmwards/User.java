@@ -3,11 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.ohmwards;
+import java.util.ArrayList;
 
 /**
  *
  * @author Cameron
  */
 public class User {
+    private String name;
+    private String password;
+    private ArrayList<Circuit> projects;
     
+    public User(String name, String password, ArrayList<Circuit> projects){
+        this.name = name;
+        this.password = password;
+        this.projects = projects;
+    }
 }
