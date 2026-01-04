@@ -149,7 +149,6 @@ public class LoginScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please fill out both fields...", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         else{
-            System.out.println(System.getProperty("user.dir"));
             String directoryPath = System.getProperty("user.dir"); // Gets project root
             Path dir = Paths.get(directoryPath);
 

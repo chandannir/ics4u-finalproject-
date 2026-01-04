@@ -27,18 +27,13 @@ public class Ohmwards {
     
     public static void addAccount(String username, String password){
         // Create the file for the account
-        File newAcc  = new File(username + ".txt");
-        try{
-            newAcc.createNewFile();
-            
-            // Write Acc info
-            BufferedWriter writer = new BufferedWriter(new FileWriter(username + ".txt"));
+        File newAcc = new File(username + ".txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(newAcc))) {
             writer.write(password);
             writer.newLine();
             writer.write("[]");
-        }
-        // This just has to be here in order for the file to read and write properly
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Ohmwards.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
