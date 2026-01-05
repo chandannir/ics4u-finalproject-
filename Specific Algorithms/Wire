@@ -1,1 +1,8 @@
+Wire is composed of Component Abstract class
+  double PowerLimit
+  String colour
+  int gauge
 
+void burnout():
+  - checks current and powerlimit if curren is too high
+  - prints to user that a burnout will happen and the current is too high
