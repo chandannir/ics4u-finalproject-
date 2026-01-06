@@ -3,6 +3,5 @@ Motor class is composed of component
   booolean electronFlow 
   double vIN
 
-getSignal() TODO 
-
-void move() TODO
+getSignal()
+  checks if its connected
