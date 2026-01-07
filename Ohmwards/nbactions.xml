@@ -51,7 +51,6 @@
                 <exec.mainClass>com.mycompany.ohmwards.Ohmwards</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.appArgs></exec.appArgs>
-                <exec.workingdir>C:\Users\Cameron\Documents\GitHub\Ohmwards</exec.workingdir>
             </properties>
         </action>
     </actions>
