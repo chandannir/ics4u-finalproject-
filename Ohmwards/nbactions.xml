@@ -15,6 +15,10 @@
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>com.mycompany.ohmwards.Ohmwards</exec.mainClass>
                 <exec.executable>java</exec.executable>
+<<<<<<< HEAD
+                <exec.workingdir></exec.workingdir>
+=======
+>>>>>>> 3126609a2d00472210b9fd229fbc2ab1ed4d1c8d
             </properties>
         </action>
         <action>
@@ -33,7 +37,7 @@
                 <exec.mainClass>com.mycompany.ohmwards.Ohmwards</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
-                <exec.workingdir>C:\Users\Cameron\Documents\GitHub\Ohmwards</exec.workingdir>
+                <exec.workingdir></exec.workingdir>
             </properties>
         </action>
         <action>
@@ -51,6 +55,10 @@
                 <exec.mainClass>com.mycompany.ohmwards.Ohmwards</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.appArgs></exec.appArgs>
+<<<<<<< HEAD
+                <exec.workingdir></exec.workingdir>
+=======
+>>>>>>> 3126609a2d00472210b9fd229fbc2ab1ed4d1c8d
             </properties>
         </action>
     </actions>
