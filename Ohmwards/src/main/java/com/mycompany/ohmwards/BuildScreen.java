@@ -60,7 +60,7 @@ public class BuildScreen extends javax.swing.JFrame {
      * Custom JPanel that displays a visual grid
      */
     private static class GridPanel extends javax.swing.JPanel {
-        private static final int GRID_SIZE = 50; // Grid box size in pixels
+        private static final int GRID_SIZE = 45; // Grid box size in pixels (1.5x original 30)
         
         public GridPanel() {
             setBackground(new java.awt.Color(255, 255, 255));
@@ -79,18 +79,26 @@ public class BuildScreen extends javax.swing.JFrame {
             
             java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
             try {
+                // Enable anti-aliasing for smoother lines, but disable for crisp grid alignment
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
+                                    java.awt.RenderingHints.VALUE_ANTIALIAS_OFF);
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_STROKE_CONTROL,
+                                    java.awt.RenderingHints.VALUE_STROKE_PURE);
+                
                 // Use a darker, more visible color
                 g2d.setColor(new java.awt.Color(150, 150, 150));
                 g2d.setStroke(new java.awt.BasicStroke(1.0f));
                 
-                // Draw vertical lines
+                // Draw vertical lines - ensure they align to exact pixel positions
                 for (int x = 0; x <= width; x += GRID_SIZE) {
-                    g2d.drawLine(x, 0, x, height);
+                    int lineX = x;
+                    g2d.drawLine(lineX, 0, lineX, height);
                 }
                 
-                // Draw horizontal lines
+                // Draw horizontal lines - ensure they align to exact pixel positions
                 for (int y = 0; y <= height; y += GRID_SIZE) {
-                    g2d.drawLine(0, y, width, y);
+                    int lineY = y;
+                    g2d.drawLine(0, lineY, width, lineY);
                 }
             } finally {
                 g2d.dispose();
