@@ -54,17 +54,60 @@ public class BuildScreen extends javax.swing.JFrame {
                 jPanel2 = gridPanel;
             }
         }
+        
+        // mouse listener for grid intersection events
+        if (jPanel2 instanceof GridPanel) {
+            GridPanel gridPanel = (GridPanel) jPanel2;
+            gridPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    java.awt.Point intersection = gridPanel.getIntersectionAt(e.getX(), e.getY());
+                    if (intersection != null) {
+                        java.awt.Point gridCoords = gridPanel.getGridCoordinates(intersection);
+                        // TODO: Implement your event handling here
+                        // Example: onIntersectionClicked(intersection, gridCoords);
+                        System.out.println("Intersection clicked at screen: (" + intersection.x + ", " + intersection.y + 
+                                         "), grid: (" + gridCoords.x + ", " + gridCoords.y + ")");
+                    }
+                }
+            });
+        }
     }
     
     /**
-     * Custom JPanel that displays a visual grid
+     * Custom JPanel that displays a visual grid with dots at intersections
      */
     private static class GridPanel extends javax.swing.JPanel {
-        private static final int GRID_SIZE = 45; // Grid box size in pixels (1.5x original 30)
+        private static final double GRID_SIZE = 43.25;
+        private static final int DOT_SIZE = 8; // Size of dots at intersections
+        private static final int CLICK_TOLERANCE = 10; // Pixel tolerance for clicking on intersections
         
         public GridPanel() {
             setBackground(new java.awt.Color(255, 255, 255));
             setOpaque(true);
+            // Enable mouse events for intersection clicks
+            setFocusable(true);
+        }
+        
+        public java.awt.Point getIntersectionAt(int screenX, int screenY) {
+            // Find nearest grid intersection
+            int gridX = (int) (Math.round(screenX / GRID_SIZE) * GRID_SIZE);
+            int gridY = (int) (Math.round(screenY / GRID_SIZE) * GRID_SIZE);
+            
+            // Check click within tolerance of an intersection
+            double distance = Math.sqrt(Math.pow(screenX - gridX, 2) + Math.pow(screenY - gridY, 2));
+            if (distance <= CLICK_TOLERANCE) {
+                return new java.awt.Point(gridX, gridY);
+            }
+            return null;
+        }
+        
+        
+        public java.awt.Point getGridCoordinates(java.awt.Point intersection) {
+            if (intersection == null) return null;
+            int col = (int) (intersection.x / GRID_SIZE);
+            int row = (int) (intersection.y / GRID_SIZE);
+            return new java.awt.Point(col, row);
         }
         
         @Override
@@ -79,26 +122,39 @@ public class BuildScreen extends javax.swing.JFrame {
             
             java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
             try {
-                // Enable anti-aliasing for smoother lines, but disable for crisp grid alignment
+                // anti-aliasing for smoother lines
                 g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
                                     java.awt.RenderingHints.VALUE_ANTIALIAS_OFF);
                 g2d.setRenderingHint(java.awt.RenderingHints.KEY_STROKE_CONTROL,
                                     java.awt.RenderingHints.VALUE_STROKE_PURE);
                 
-                // Use a darker, more visible color
+                // Draw grid lines
                 g2d.setColor(new java.awt.Color(150, 150, 150));
                 g2d.setStroke(new java.awt.BasicStroke(1.0f));
                 
-                // Draw vertical lines - ensure they align to exact pixel positions
-                for (int x = 0; x <= width; x += GRID_SIZE) {
-                    int lineX = x;
+                // Draw vertical lines
+                for (double x = 0; x <= width; x += GRID_SIZE) {
+                    int lineX = (int) x;
                     g2d.drawLine(lineX, 0, lineX, height);
                 }
                 
-                // Draw horizontal lines - ensure they align to exact pixel positions
-                for (int y = 0; y <= height; y += GRID_SIZE) {
-                    int lineY = y;
+                // Draw horizontal lines 
+                for (double y = 0; y <= height; y += GRID_SIZE) {
+                    int lineY = (int) y;
                     g2d.drawLine(0, lineY, width, lineY);
+                }
+                
+                // Draw dots at each intersection
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
+                                    java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new java.awt.Color(0, 100, 255)); // Blue color
+                
+                for (double x = 0; x <= width; x += GRID_SIZE) {
+                    for (double y = 0; y <= height; y += GRID_SIZE) {
+                        int dotX = (int) x - DOT_SIZE / 2;
+                        int dotY = (int) y - DOT_SIZE / 2;
+                        g2d.fillOval(dotX, dotY, DOT_SIZE, DOT_SIZE);
+                    }
                 }
             } finally {
                 g2d.dispose();
