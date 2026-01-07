@@ -17,6 +17,85 @@ public class BuildScreen extends javax.swing.JFrame {
      */
     public BuildScreen() {
         initComponents();
+        // Ensure jPanel2 is a GridPanel (in case NetBeans regenerated it)
+        if (!(jPanel2 instanceof GridPanel)) {
+            javax.swing.JPanel oldPanel = jPanel2;
+            GridPanel gridPanel = new GridPanel();
+            gridPanel.setPreferredSize(oldPanel.getPreferredSize());
+            gridPanel.setMinimumSize(oldPanel.getMinimumSize());
+            gridPanel.setMaximumSize(oldPanel.getMaximumSize());
+            
+            // Replace in parent container
+            java.awt.Container parent = oldPanel.getParent();
+            if (parent != null) {
+                int index = -1;
+                java.awt.LayoutManager layout = parent.getLayout();
+                if (layout instanceof javax.swing.GroupLayout) {
+                    // For GroupLayout, we need to replace the component
+                    parent.remove(oldPanel);
+                    parent.add(gridPanel);
+                } else {
+                    // For other layouts, find the index and replace
+                    for (int i = 0; i < parent.getComponentCount(); i++) {
+                        if (parent.getComponent(i) == oldPanel) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index >= 0) {
+                        parent.remove(index);
+                        parent.add(gridPanel, index);
+                    }
+                }
+                jPanel2 = gridPanel;
+                parent.revalidate();
+                parent.repaint();
+            } else {
+                jPanel2 = gridPanel;
+            }
+        }
+    }
+    
+    /**
+     * Custom JPanel that displays a visual grid
+     */
+    private static class GridPanel extends javax.swing.JPanel {
+        private static final int GRID_SIZE = 50; // Grid box size in pixels
+        
+        public GridPanel() {
+            setBackground(new java.awt.Color(255, 255, 255));
+            setOpaque(true);
+        }
+        
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+            int width = getWidth();
+            int height = getHeight();
+            
+            if (width <= 0 || height <= 0) {
+                return;
+            }
+            
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
+            try {
+                // Use a darker, more visible color
+                g2d.setColor(new java.awt.Color(150, 150, 150));
+                g2d.setStroke(new java.awt.BasicStroke(1.0f));
+                
+                // Draw vertical lines
+                for (int x = 0; x <= width; x += GRID_SIZE) {
+                    g2d.drawLine(x, 0, x, height);
+                }
+                
+                // Draw horizontal lines
+                for (int y = 0; y <= height; y += GRID_SIZE) {
+                    g2d.drawLine(0, y, width, y);
+                }
+            } finally {
+                g2d.dispose();
+            }
+        }
     }
 
     /**
@@ -32,7 +111,7 @@ public class BuildScreen extends javax.swing.JFrame {
         popupMenu2 = new java.awt.PopupMenu();
         jPanel1 = new javax.swing.JPanel();
         finishBtn = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        jPanel2 = new GridPanel();
         componentChoice = new java.awt.Choice();
         exitBtn = new javax.swing.JButton();
         voltLabel = new javax.swing.JLabel();
@@ -51,18 +130,7 @@ public class BuildScreen extends javax.swing.JFrame {
         finishBtn.setForeground(new java.awt.Color(255, 255, 255));
         finishBtn.setText("Finish");
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 358, Short.MAX_VALUE)
-        );
+        jPanel2.setPreferredSize(new java.awt.Dimension(800, 358));
 
         componentChoice.setBackground(new java.awt.Color(0, 153, 0));
         componentChoice.setForeground(new java.awt.Color(255, 255, 255));
