@@ -17,9 +17,9 @@ public abstract class Component {
     private double resistance;
     private double power;
     private String name;
-    private String direction;
+    private Direction direction;
     
-    public Component(ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, String direction)
+    public Component(ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction)
     {
         this.type = type;
         this.position = position;
@@ -30,6 +30,8 @@ public abstract class Component {
         this.name = name;
         this.direction = direction;
     }
+    
+    // Getters + Setters
     
     public void displayPopup(){
         // Display the info and stuff in a popup menu on click

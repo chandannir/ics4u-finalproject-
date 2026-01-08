@@ -15,7 +15,7 @@ public class Wire extends Component {
     private String colour;
     private int gauge;
 
-    public Wire(double powerLimit, String colour, int gauge, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, String direction) {
+    public Wire(double powerLimit, String colour, int gauge, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
         super(type, position, voltage, current, resistance, power, name, direction);
     }
     

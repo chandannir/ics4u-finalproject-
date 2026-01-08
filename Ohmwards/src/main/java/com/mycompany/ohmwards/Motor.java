@@ -15,11 +15,11 @@ public class Motor extends Component {
     private boolean electronFlow;
     private double vIN;
 
-    public Motor(boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, String direction) {
+    public Motor(boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(type, position, voltage, current, resistance, power, name, direction);
         this.state = state;
         this.electronFlow = electronFlow;
         this.vIN = vIN;
-        super(type, position, voltage, current, resistance, power, name, direction);
     }
     
     public boolean getState() {
