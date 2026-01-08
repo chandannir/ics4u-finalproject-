@@ -16,7 +16,7 @@ public class Ohmwards {
     public static MainMenu main;
     public static User currUser;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) {  
         addAccount("totallyRoland", "vergyIsStronger");
         addAccount("bongbong", "#bestEmployee");
         addAccount("heathcliff", "catherine");
