@@ -12,18 +12,28 @@ import java.util.Vector;
  */
 public class Diode extends Component {
     private boolean electronFlow;
+    private Direction direction;
     
     public Diode(boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name) {
-        super(type, position, voltage, current, resistance, power, name, diodeDirection); // Change this to direction enum
+        super(type, position, voltage, current, resistance, power, name, diodeDirection);
         this.electronFlow = electronFlow;
+        this.direction = diodeDirection;
     }
    
     public boolean getElectronFlow() {
         return electronFlow;
     }
     
+    public Direction getDirection() {
+        return direction;
+    }
+    
     public void setElectronFlow(boolean newFlow) {
         this.electronFlow = newFlow;
+    }
+    
+    public void setDirection(Direction newDirection) {
+        this.direction = newDirection;
     }
     
     public void Break() {
