@@ -78,7 +78,7 @@ public class BuildScreen extends javax.swing.JFrame {
      * Custom JPanel that displays a visual grid with dots at intersections
      */
     private static class GridPanel extends javax.swing.JPanel {
-        private static final double GRID_SIZE = 43.25;
+        private static final double GRID_SIZE = 70;
         private static final int DOT_SIZE = 8; // Size of dots at intersections
         private static final int CLICK_TOLERANCE = 10; // Pixel tolerance for clicking on intersections
         
