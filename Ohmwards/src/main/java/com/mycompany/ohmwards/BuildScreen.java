@@ -186,6 +186,8 @@ public class BuildScreen extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(51, 51, 51));
 
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+
         placeBtn.setBackground(new java.awt.Color(255, 0, 0));
         placeBtn.setForeground(new java.awt.Color(255, 255, 255));
         placeBtn.setText("Place");
@@ -211,16 +213,21 @@ public class BuildScreen extends javax.swing.JFrame {
         exitBtn.setText("Exit");
         exitBtn.addActionListener(this::exitBtnActionPerformed);
 
+        voltLabel.setForeground(new java.awt.Color(255, 255, 255));
         voltLabel.setText("Voltage: ");
 
+        curntLabel.setForeground(new java.awt.Color(255, 255, 255));
         curntLabel.setText("Current: ");
 
+        resLabel.setForeground(new java.awt.Color(255, 255, 255));
         resLabel.setText("Resistance: ");
 
+        powLabel.setForeground(new java.awt.Color(255, 255, 255));
         powLabel.setText("Power: ");
 
         projectTitle.setText("Unknown #1");
 
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Project Title:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -259,7 +266,7 @@ public class BuildScreen extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(32, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -293,10 +300,7 @@ public class BuildScreen extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
