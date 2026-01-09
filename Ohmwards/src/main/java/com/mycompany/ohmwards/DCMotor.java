@@ -14,7 +14,7 @@ public class DCMotor extends Motor {
     
     private int rpm;
     
-    public DCMotor(int rpm, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, String direction) {
+    public DCMotor(int rpm, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
         super(state, electronFlow, vIN, type, position, voltage, current, resistance, power, name, direction);
         this.rpm = rpm;
     }
