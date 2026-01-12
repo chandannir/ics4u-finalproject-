@@ -10,8 +10,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JFrame;
 import java.awt.FlowLayout;
+import java.awt.Color;
 
 /**
  *
@@ -25,23 +25,25 @@ public class BuildScreen extends javax.swing.JFrame {
     private Vector<Integer> pos2 = new Vector<Integer>();
     
     // Popup Window
-    private JDialog dialog = new JDialog(this, "Component", true);
-
+    private final JDialog dialog = new JDialog(this, "Component", true);
+    private final JButton deleteBtn = new JButton("Trash");
     /**
      * Creates new form BuildScreen
      */
     public BuildScreen() {
         initComponents();
+        
+        // Popup windows
         dialog.setLayout(new FlowLayout());
         JTextField field1 = new JTextField(10);
         JTextField field2 = new JTextField(10);
-        JButton closeBtn = new JButton("Close");
-        closeBtn.addActionListener(e -> dialog.dispose());
+        deleteBtn.setBackground(Color.RED);
+        deleteBtn.setForeground(Color.WHITE);
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("Colour:")); panel.add(field1);
         panel.add(new JLabel("Resistance:")); panel.add(field2);
-        panel.add(closeBtn);
+        panel.add(deleteBtn);
 
         dialog.add(panel);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -329,6 +331,14 @@ public class BuildScreen extends javax.swing.JFrame {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         // Code to run when button is clicked
                         dialog.setLocationRelativeTo(component);
+                        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent e) {
+                                // Physically remove component
+                                component.setVisible(false);
+                                jPanel2.remove(component);
+                                dialog.dispose();
+                            }
+                        });
                         dialog.setVisible(true);
                     }
                 });
