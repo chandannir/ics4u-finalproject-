@@ -285,28 +285,32 @@ public class BuildScreen extends javax.swing.JFrame {
         else{
             if((!pos1.get(0).equals(pos2.get(0))) && (!pos1.get(1).equals(pos2.get(1)))){
                 JOptionPane.showMessageDialog(null, "Cannot place components diagonally!", "Error", JOptionPane.ERROR_MESSAGE);
-                pos1.clear();
-                pos2.clear();
             }
             else if(pos1.equals(pos2)){
                 JOptionPane.showMessageDialog(null, "Both positions need to be different!", "Error", JOptionPane.ERROR_MESSAGE);
-                pos1.clear();
-                pos2.clear();
             }
             else{
-                System.out.println("Works!");
-                
                 // Place a btn at the midPoint
                 double minX = (pos1.get(0) + pos2.get(0)) / 2.0;
                 double minY = (pos1.get(1) + pos2.get(1)) / 2.0;
                 
+                jPanel2.setLayout(null);
                 JButton component = new JButton("Component");
-                this.setLayout(null);
-                this.add(component);
-                component.setBounds((int) minX, (int) minY, 100, 30);
+                jPanel2.add(component);
+                component.setBounds((int) minX - 35, (int) minY - 15, 70, 30);
+                jPanel2.setVisible(true); 
                 component.setVisible(true);
+                
+                component.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        // Code to run when button is clicked
+                        System.out.println("Button clicked!");
+                    }
+                });
             }
         }
+        pos1.clear();
+        pos2.clear();
     }
 
     private void choiceItemStateChanged(java.awt.event.ItemEvent evt){
