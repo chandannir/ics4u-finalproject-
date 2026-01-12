@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.ohmwards;
-
+import java.util.Vector;
+import java.awt.*;
 /**
  *
  * @author Cameron
@@ -11,6 +12,9 @@ package com.mycompany.ohmwards;
 public class BuildScreen extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuildScreen.class.getName());
+    
+    private Vector<Integer> pos1 = new Vector<Integer>();
+    private Vector<Integer> pos2 = new Vector<Integer>();
 
     /**
      * Creates new form BuildScreen
@@ -27,6 +31,15 @@ public class BuildScreen extends javax.swing.JFrame {
                         java.awt.Point gridCoords = gridPanel.getGridCoordinates(intersection);
                         System.out.println("Intersection clicked at screen: (" + intersection.x + ", " + intersection.y + 
                                          "), grid: (" + gridCoords.x + ", " + gridCoords.y + ")");
+                        
+                        if(pos1.isEmpty()){
+                            pos1.add(intersection.x);
+                            pos1.add(intersection.y);
+                        }
+                        else{
+                            pos2.add(intersection.x);
+                            pos2.add(intersection.y);
+                        }
                     }
                 }
             });
@@ -150,11 +163,13 @@ public class BuildScreen extends javax.swing.JFrame {
         placeBtn.setBackground(new java.awt.Color(255, 0, 0));
         placeBtn.setForeground(new java.awt.Color(255, 255, 255));
         placeBtn.setText("Place");
+        placeBtn.addActionListener(this::placeBtnActionPerformed);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 358));
 
         componentChoice.setBackground(new java.awt.Color(0, 153, 0));
         componentChoice.setForeground(new java.awt.Color(255, 255, 255));
+        componentChoice.addItemListener(this::choiceItemStateChanged);
 
         exitBtn.setBackground(new java.awt.Color(0, 51, 204));
         exitBtn.setForeground(new java.awt.Color(255, 255, 255));
@@ -259,6 +274,17 @@ public class BuildScreen extends javax.swing.JFrame {
         home.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_exitBtnActionPerformed
+
+    private void placeBtnActionPerformed(java.awt.event.ActionEvent evt){
+        System.out.println(pos1);
+        System.out.println(pos2);
+    }
+
+    private void choiceItemStateChanged(java.awt.event.ItemEvent evt){
+        // Reset positions
+        pos1.clear();
+        pos2.clear();
+    }
 
     /**
      * @param args the command line arguments
