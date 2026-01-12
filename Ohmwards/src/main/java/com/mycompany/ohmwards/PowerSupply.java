@@ -4,10 +4,23 @@
  */
 package com.mycompany.ohmwards;
 
+import java.util.Vector;
+
 /**
  *
  * @author Cameron
  */
-public class PowerSupply {
+public class PowerSupply extends PowerSource {
     
+    public PowerSupply(double voltageOut, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(voltageOut, type, position, voltage, current, resistance, power, name, direction);
+    }
+    
+    public void surge() {
+    // TODO!
+    }
+    
+    public void changeOut() {
+    // TODO!
+    }
 }

@@ -4,10 +4,19 @@
  */
 package com.mycompany.ohmwards;
 
+import java.util.Vector;
+
 /**
  *
  * @author Cameron
  */
-public class Battery {
+public class Battery extends PowerSource {
     
+    public Battery(double voltageOut, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(voltageOut, type, position, voltage, current, resistance, power, name, direction);
+    }
+    
+    public void surge() {
+        // TODO!
+    }
 }

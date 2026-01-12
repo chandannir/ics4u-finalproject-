@@ -4,10 +4,24 @@
  */
 package com.mycompany.ohmwards;
 
+import java.util.Vector;
+
 /**
  *
  * @author Cameron
  */
-public class Relay {
+public class Relay extends PowerSupply {
     
+    public Relay(double voltageOut, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(voltageOut, type, position, voltage, current, resistance, power, name, direction);
+    }
+    
+    @Override
+    public void surge() {
+    // TODO!
+    }
+    
+    public void convert() {
+    // TODO!
+    }
 }
