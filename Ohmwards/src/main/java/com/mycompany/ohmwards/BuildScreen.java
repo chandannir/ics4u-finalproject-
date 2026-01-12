@@ -17,45 +17,6 @@ public class BuildScreen extends javax.swing.JFrame {
      */
     public BuildScreen() {
         initComponents();
-        // Ensure jPanel2 is a GridPanel (in case NetBeans regenerated it)
-        if (!(jPanel2 instanceof GridPanel)) {
-            javax.swing.JPanel oldPanel = jPanel2;
-            GridPanel gridPanel = new GridPanel();
-            gridPanel.setPreferredSize(oldPanel.getPreferredSize());
-            gridPanel.setMinimumSize(oldPanel.getMinimumSize());
-            gridPanel.setMaximumSize(oldPanel.getMaximumSize());
-            
-            // Replace in parent container
-            java.awt.Container parent = oldPanel.getParent();
-            if (parent != null) {
-                int index = -1;
-                java.awt.LayoutManager layout = parent.getLayout();
-                if (layout instanceof javax.swing.GroupLayout) {
-                    // For GroupLayout, we need to replace the component
-                    parent.remove(oldPanel);
-                    parent.add(gridPanel);
-                } else {
-                    // For other layouts, find the index and replace
-                    for (int i = 0; i < parent.getComponentCount(); i++) {
-                        if (parent.getComponent(i) == oldPanel) {
-                            index = i;
-                            break;
-                        }
-                    }
-                    if (index >= 0) {
-                        parent.remove(index);
-                        parent.add(gridPanel, index);
-                    }
-                }
-                jPanel2 = gridPanel;
-                parent.revalidate();
-                parent.repaint();
-            } else {
-                jPanel2 = gridPanel;
-            }
-        }
-        
-        // mouse listener for grid intersection events
         if (jPanel2 instanceof GridPanel) {
             GridPanel gridPanel = (GridPanel) jPanel2;
             gridPanel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -64,8 +25,6 @@ public class BuildScreen extends javax.swing.JFrame {
                     java.awt.Point intersection = gridPanel.getIntersectionAt(e.getX(), e.getY());
                     if (intersection != null) {
                         java.awt.Point gridCoords = gridPanel.getGridCoordinates(intersection);
-                        // TODO: Implement your event handling here
-                        // Example: onIntersectionClicked(intersection, gridCoords);
                         System.out.println("Intersection clicked at screen: (" + intersection.x + ", " + intersection.y + 
                                          "), grid: (" + gridCoords.x + ", " + gridCoords.y + ")");
                     }
@@ -79,8 +38,8 @@ public class BuildScreen extends javax.swing.JFrame {
      */
     private static class GridPanel extends javax.swing.JPanel {
         private static final double GRID_SIZE = 70;
-        private static final int DOT_SIZE = 8; // Size of dots at intersections
-        private static final int CLICK_TOLERANCE = 10; // Pixel tolerance for clicking on intersections
+        private static final int DOT_SIZE = 8; 
+        private static final int CLICK_TOLERANCE = 10; 
         
         public GridPanel() {
             setBackground(new java.awt.Color(255, 255, 255));
@@ -173,7 +132,7 @@ public class BuildScreen extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         placeBtn = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        jPanel2 = new GridPanel();
         componentChoice = new java.awt.Choice();
         exitBtn = new javax.swing.JButton();
         voltLabel = new javax.swing.JLabel();
@@ -192,18 +151,7 @@ public class BuildScreen extends javax.swing.JFrame {
         placeBtn.setForeground(new java.awt.Color(255, 255, 255));
         placeBtn.setText("Place");
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 358, Short.MAX_VALUE)
-        );
+        jPanel2.setPreferredSize(new java.awt.Dimension(800, 358));
 
         componentChoice.setBackground(new java.awt.Color(0, 153, 0));
         componentChoice.setForeground(new java.awt.Color(255, 255, 255));
