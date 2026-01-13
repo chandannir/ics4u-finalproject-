@@ -5,7 +5,7 @@
 package com.mycompany.ohmwards;
 
 import java.util.Vector;
-
+import javax.swing.JButton;
 /**
  *
  * @author Cameron
@@ -14,8 +14,8 @@ public class LED extends Diode {
     private String colour;
     private boolean isEmitting;
 
-    public LED(String colour, boolean isEmitting, boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(electronFlow, diodeDirection, type, position, voltage, current, resistance, power, name);
+    public LED(String colour, boolean isEmitting, boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(electronFlow, diodeDirection, type, position, btn, voltage, current, resistance, power, name);
         this.colour = colour;
         this.isEmitting = isEmitting;
     }

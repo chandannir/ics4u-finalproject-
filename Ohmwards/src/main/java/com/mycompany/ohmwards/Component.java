@@ -4,7 +4,7 @@
  */
 package com.mycompany.ohmwards;
 import java.util.Vector;
-
+import javax.swing.JButton;
 /**
  *
  * @author Cameron
@@ -12,6 +12,7 @@ import java.util.Vector;
 public abstract class Component {
     private ConnectionType type;
     private Vector<Double> position;
+    private JButton compBtn;
     private double voltage;
     private double current;
     private double resistance;
@@ -19,10 +20,11 @@ public abstract class Component {
     private String name;
     private Direction direction;
     
-    public Component(ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction)
+    public Component(ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction)
     {
         this.type = type;
         this.position = position;
+        compBtn = btn;
         this.voltage = voltage;
         this.current = current;
         this.resistance = resistance;

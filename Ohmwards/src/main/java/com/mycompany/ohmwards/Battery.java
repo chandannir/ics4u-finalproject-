@@ -5,15 +5,15 @@
 package com.mycompany.ohmwards;
 
 import java.util.Vector;
-
+import javax.swing.JButton;
 /**
  *
  * @author Cameron
  */
 public class Battery extends PowerSource {
     
-    public Battery(double voltageOut, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(voltageOut, type, position, voltage, current, resistance, power, name, direction);
+    public Battery(double voltageOut, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(voltageOut, type, position, btn, voltage, current, resistance, power, name, direction);
     }
     
     public void surge() {
