@@ -32,7 +32,7 @@ public class HomePage extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         quitBtn = new javax.swing.JButton();
         newProjectBtn = new javax.swing.JButton();
-        continueBtn = new javax.swing.JButton();
+        accountsBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -51,11 +51,11 @@ public class HomePage extends javax.swing.JFrame {
         newProjectBtn.setText("Start New");
         newProjectBtn.addActionListener(this::newProjectBtnActionPerformed);
 
-        continueBtn.setBackground(new java.awt.Color(255, 0, 0));
-        continueBtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        continueBtn.setForeground(new java.awt.Color(255, 255, 255));
-        continueBtn.setText("Continue");
-        continueBtn.addActionListener(this::continueBtnActionPerformed);
+        accountsBtn.setBackground(new java.awt.Color(255, 0, 0));
+        accountsBtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        accountsBtn.setForeground(new java.awt.Color(255, 255, 255));
+        accountsBtn.setText("Accounts");
+        accountsBtn.addActionListener(this::accountsBtnActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -74,7 +74,7 @@ public class HomePage extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(newProjectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(continueBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(accountsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(quitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(149, 149, 149))))
         );
@@ -84,7 +84,7 @@ public class HomePage extends javax.swing.JFrame {
                 .addGap(41, 41, 41)
                 .addComponent(jLabel1)
                 .addGap(33, 33, 33)
-                .addComponent(continueBtn)
+                .addComponent(accountsBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newProjectBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -106,9 +106,9 @@ public class HomePage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void continueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueBtnActionPerformed
+    private void accountsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountsBtnActionPerformed
         JOptionPane.showMessageDialog(null, "Feature not added yet!", "Error", JOptionPane.ERROR_MESSAGE);   
-    }//GEN-LAST:event_continueBtnActionPerformed
+    }//GEN-LAST:event_accountsBtnActionPerformed
 
     private void newProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectBtnActionPerformed
         BuildScreen build = new BuildScreen();
@@ -146,7 +146,7 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton continueBtn;
+    private javax.swing.JButton accountsBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton newProjectBtn;
