@@ -24,31 +24,13 @@ public class BuildScreen extends javax.swing.JFrame {
     private Vector<Integer> pos1 = new Vector<Integer>();
     private Vector<Integer> pos2 = new Vector<Integer>();
     private java.util.List<java.awt.Point> componentIntersections = new java.util.ArrayList<>();
+    private java.util.Map<JButton, java.awt.Point[]> componentMap = new java.util.HashMap<>();
     
-    // Popup Window
-    private final JDialog dialog = new JDialog(this, "Component", true);
-    private final JButton deleteBtn = new JButton("Trash");
     /**
      * Creates new form BuildScreen
      */
     public BuildScreen() {
         initComponents();
-        
-        // Popup windows
-        dialog.setLayout(new FlowLayout());
-        JTextField field1 = new JTextField(10);
-        JTextField field2 = new JTextField(10);
-        deleteBtn.setBackground(Color.RED);
-        deleteBtn.setForeground(Color.WHITE);
-
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Colour:")); panel.add(field1);
-        panel.add(new JLabel("Resistance:")); panel.add(field2);
-        panel.add(deleteBtn);
-
-        dialog.add(panel);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.pack();
         
         if (jPanel2 instanceof GridPanel) {
             GridPanel gridPanel = (GridPanel) jPanel2;
@@ -115,6 +97,20 @@ public class BuildScreen extends javax.swing.JFrame {
             int col = (int) (intersection.x / GRID_SIZE);
             int row = (int) (intersection.y / GRID_SIZE);
             return new java.awt.Point(col, row);
+        }
+        
+        public boolean isDotVisibleAt(double x, double y) {
+            if (componentIntersections == null || componentIntersections.isEmpty()) {
+                return true;
+            }
+            for (java.awt.Point intersection : componentIntersections) {
+                double dx = Math.abs(x - intersection.x);
+                double dy = Math.abs(y - intersection.y);
+                if ((dx == GRID_SIZE && dy == 0) || (dx == 0 && dy == GRID_SIZE)) {
+                    return true;
+                }
+            }
+            return false;
         }
         
         @Override
@@ -328,7 +324,6 @@ public class BuildScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_exitBtnActionPerformed
 
     private void placeBtnActionPerformed(java.awt.event.ActionEvent evt){
-        // Validation Checks
         if(pos1.isEmpty() || pos2.isEmpty()){
             JOptionPane.showMessageDialog(null, "Both positions need to be selected!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -340,12 +335,22 @@ public class BuildScreen extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Both positions need to be different!", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else{
-                // Place a btn at the midPoint
+                GridPanel gridPanel = (GridPanel) jPanel2;
+                java.awt.Point p1 = new java.awt.Point(pos1.get(0), pos1.get(1));
+                java.awt.Point p2 = new java.awt.Point(pos2.get(0), pos2.get(1));
+                
+                if (!gridPanel.isDotVisibleAt(p1.x, p1.y) || !gridPanel.isDotVisibleAt(p2.x, p2.y)) {
+                    JOptionPane.showMessageDialog(null, "Can only place components between intersections with dots!", "Error", JOptionPane.ERROR_MESSAGE);
+                    pos1.clear();
+                    pos2.clear();
+                    return;
+                }
+                
                 double minX = (pos1.get(0) + pos2.get(0)) / 2.0;
                 double minY = (pos1.get(1) + pos2.get(1)) / 2.0;
                 
-                componentIntersections.add(new java.awt.Point(pos1.get(0), pos1.get(1)));
-                componentIntersections.add(new java.awt.Point(pos2.get(0), pos2.get(1)));
+                componentIntersections.add(p1);
+                componentIntersections.add(p2);
                 
                 jPanel2.setLayout(null);
                 JButton component = new JButton("Component");
@@ -354,19 +359,44 @@ public class BuildScreen extends javax.swing.JFrame {
                 jPanel2.setVisible(true); 
                 component.setVisible(true);
                 
+                componentMap.put(component, new java.awt.Point[]{p1, p2});
+                
                 component.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
-                        // Code to run when button is clicked
-                        dialog.setLocationRelativeTo(component);
+                        JDialog componentDialog = new JDialog(BuildScreen.this, "Component", true);
+                        componentDialog.setLayout(new FlowLayout());
+                        JTextField field1 = new JTextField(10);
+                        JTextField field2 = new JTextField(10);
+                        JButton deleteBtn = new JButton("Trash");
+                        deleteBtn.setBackground(Color.RED);
+                        deleteBtn.setForeground(Color.WHITE);
+                        
+                        JPanel panel = new JPanel();
+                        panel.add(new JLabel("Colour:")); panel.add(field1);
+                        panel.add(new JLabel("Resistance:")); panel.add(field2);
+                        panel.add(deleteBtn);
+                        
+                        componentDialog.add(panel);
+                        componentDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                        componentDialog.pack();
+                        
                         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
-                            public void actionPerformed(java.awt.event.ActionEvent e) {
-                                // Physically remove component
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                java.awt.Point[] intersections = componentMap.get(component);
+                                if (intersections != null) {
+                                    componentIntersections.remove(intersections[0]);
+                                    componentIntersections.remove(intersections[1]);
+                                    componentMap.remove(component);
+                                }
                                 component.setVisible(false);
                                 jPanel2.remove(component);
-                                dialog.dispose();
+                                componentDialog.dispose();
+                                jPanel2.repaint();
                             }
                         });
-                        dialog.setVisible(true);
+                        
+                        componentDialog.setLocationRelativeTo(component);
+                        componentDialog.setVisible(true);
                     }
                 });
                 
