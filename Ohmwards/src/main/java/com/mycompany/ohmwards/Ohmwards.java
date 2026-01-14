@@ -3,10 +3,10 @@
  */
 
 package com.mycompany.ohmwards;
-import java.util.ArrayList;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.DriverManager;
 
 /**
  *
@@ -15,16 +15,21 @@ import java.util.logging.Logger;
 public class Ohmwards {
     public static MainMenu main;
     public static User currUser;
+    public static SaveDatabase saveDatabase;
     
-    public static void main(String[] args) {  
+    // Make sure to connect database here
+    public static void main(String[] args) {
+        
         addAccount("totallyRoland", "vergyIsStronger");
         addAccount("bongbong", "#bestEmployee");
         addAccount("heathcliff", "catherine");
         
+        saveDatabase = new SaveDatabase();
         main = new MainMenu();
         main.setVisible(true);
     }
     
+    // Change this to save to the database instead
     public static void addAccount(String username, String password){
         // Create the file for the account
         File newAcc = new File(username + ".txt");

@@ -10,4 +10,13 @@
         <maven.compiler.release>17</maven.compiler.release>
         <exec.mainClass>com.mycompany.ohmwards.Ohmwards</exec.mainClass>
     </properties>
+    <dependencies>
+        <!-- Source: https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.51.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
