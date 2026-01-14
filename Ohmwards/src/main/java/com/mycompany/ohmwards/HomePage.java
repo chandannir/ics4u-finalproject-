@@ -3,6 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.ohmwards;
+import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +23,37 @@ import javax.swing.JOptionPane;
 public class HomePage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(HomePage.class.getName());
-
+    private final JDialog dialog = new JDialog(this, "Accounts:", true);
+    private final JButton loginBtn = new JButton("Login");
+    
     /**
      * Creates new form HomePage
      */
     public HomePage() {
         initComponents();
+        dialog.setSize(300, 200);
+    }
+    
+    private ArrayList<String> SortAccounts(ArrayList<String> arr, int len){
+         // Insertion Sort Algorithm
+        if (len <= 1) // Base Case (don't need to sort if only 1 or less elements)
+        {
+            return arr; 
+        }
+
+        SortAccounts(arr, len - 1); //one element sorted, sort the remaining array
+       
+        String last = arr.get(len - 1); //last element of the array
+        int corrIndex = len - 2; //correct index of last element of the array
+       
+        while (corrIndex >= 0 && arr.get(corrIndex).compareTo(last) > 0) //find the correct index of the last element
+        { 
+            arr.set(corrIndex + 1, arr.get(corrIndex)); //shift section of sorted elements upwards by one element if correct index isn't found
+            corrIndex--; 
+        } 
+        arr.set(corrIndex + 1, last); //set the last element at its correct index
+        
+        return arr;
     }
 
     /**
@@ -32,7 +68,7 @@ public class HomePage extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         quitBtn = new javax.swing.JButton();
         newProjectBtn = new javax.swing.JButton();
-        continueBtn = new javax.swing.JButton();
+        accountsBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -51,11 +87,11 @@ public class HomePage extends javax.swing.JFrame {
         newProjectBtn.setText("Start New");
         newProjectBtn.addActionListener(this::newProjectBtnActionPerformed);
 
-        continueBtn.setBackground(new java.awt.Color(255, 0, 0));
-        continueBtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        continueBtn.setForeground(new java.awt.Color(255, 255, 255));
-        continueBtn.setText("Continue");
-        continueBtn.addActionListener(this::continueBtnActionPerformed);
+        accountsBtn.setBackground(new java.awt.Color(255, 0, 0));
+        accountsBtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        accountsBtn.setForeground(new java.awt.Color(255, 255, 255));
+        accountsBtn.setText("Accounts");
+        accountsBtn.addActionListener(this::accountsBtnActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -74,7 +110,7 @@ public class HomePage extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(newProjectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(continueBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(accountsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(quitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(149, 149, 149))))
         );
@@ -84,7 +120,7 @@ public class HomePage extends javax.swing.JFrame {
                 .addGap(41, 41, 41)
                 .addComponent(jLabel1)
                 .addGap(33, 33, 33)
-                .addComponent(continueBtn)
+                .addComponent(accountsBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newProjectBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -106,9 +142,37 @@ public class HomePage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void continueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueBtnActionPerformed
-        JOptionPane.showMessageDialog(null, "Feature not added yet!", "Error", JOptionPane.ERROR_MESSAGE);   
-    }//GEN-LAST:event_continueBtnActionPerformed
+    private void accountsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountsBtnActionPerformed
+        ArrayList<String> accounts = new ArrayList<>();
+        ArrayList<String> passwords = new ArrayList<>();
+        String directoryPath = System.getProperty("user.dir"); // Gets project root
+        Path dir = Paths.get(directoryPath);
+        
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.txt")) {
+            for (Path file : stream) {
+                // Process each .txt file
+                String name = file.getFileName().toString();
+                name = name.substring(0, name.length() - 4);
+                accounts.add(name);
+                passwords.add(Files.readAllLines(file).get(0));
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+        accounts = SortAccounts(accounts, accounts.size());
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        for(int acc = 0; acc < accounts.size(); acc++){
+            panel.add(new JLabel(accounts.get(acc) + "; Password: " + passwords.get(acc)));
+        }
+        
+        dialog.add(panel);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_accountsBtnActionPerformed
 
     private void newProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectBtnActionPerformed
         BuildScreen build = new BuildScreen();
@@ -146,7 +210,7 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton continueBtn;
+    private javax.swing.JButton accountsBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton newProjectBtn;

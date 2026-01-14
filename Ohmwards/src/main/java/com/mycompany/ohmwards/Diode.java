@@ -5,7 +5,7 @@
 package com.mycompany.ohmwards;
 
 import java.util.Vector;
-
+import javax.swing.JButton;
 /**
  *
  * @author Cameron
@@ -14,8 +14,8 @@ public class Diode extends Component {
     private boolean electronFlow;
     private Direction direction;
     
-    public Diode(boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name) {
-        super(type, position, voltage, current, resistance, power, name, diodeDirection);
+    public Diode(boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name) {
+        super(type, position, btn, voltage, current, resistance, power, name, diodeDirection);
         this.electronFlow = electronFlow;
         this.direction = diodeDirection;
     }

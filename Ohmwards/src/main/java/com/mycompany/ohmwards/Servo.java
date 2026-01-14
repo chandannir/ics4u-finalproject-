@@ -5,7 +5,7 @@
 package com.mycompany.ohmwards;
 
 import java.util.Vector;
-
+import javax.swing.JButton;
 /**
  *
  * @author Cameron
@@ -14,8 +14,8 @@ public class Servo extends Motor {
     
     private int degree;
     
-    public Servo(int degree, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(state, electronFlow, vIN, type, position, voltage, current, resistance, power, name, direction);
+    public Servo(int degree, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(state, electronFlow, vIN, type, position, btn, voltage, current, resistance, power, name, direction);
         this.degree = degree;
     }
     

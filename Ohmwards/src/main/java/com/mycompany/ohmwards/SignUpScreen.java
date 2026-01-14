@@ -104,7 +104,7 @@ public class SignUpScreen extends javax.swing.JFrame {
         jLabel6.setText("Ohmwards");
 
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Username:");
+        jLabel7.setText("Password:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

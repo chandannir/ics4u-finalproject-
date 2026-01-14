@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.ohmwards;
-
+import javax.swing.JButton;
 import java.util.Vector;
 
 /**
@@ -14,8 +14,8 @@ public class DCMotor extends Motor {
     
     private int rpm;
     
-    public DCMotor(int rpm, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(state, electronFlow, vIN, type, position, voltage, current, resistance, power, name, direction);
+    public DCMotor(int rpm, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
+        super(state, electronFlow, vIN, type, position, btn, voltage, current, resistance, power, name, direction);
         this.rpm = rpm;
     }
     
