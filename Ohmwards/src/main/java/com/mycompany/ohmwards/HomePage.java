@@ -3,6 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.ohmwards;
+import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +23,37 @@ import javax.swing.JOptionPane;
 public class HomePage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(HomePage.class.getName());
-
+    private final JDialog dialog = new JDialog(this, "Accounts:", true);
+    private final JButton loginBtn = new JButton("Login");
+    
     /**
      * Creates new form HomePage
      */
     public HomePage() {
         initComponents();
+        dialog.setSize(300, 200);
+    }
+    
+    private ArrayList<String> SortAccounts(ArrayList<String> arr, int len){
+         // Insertion Sort Algorithm
+        if (len <= 1) // Base Case (don't need to sort if only 1 or less elements)
+        {
+            return arr; 
+        }
+
+        SortAccounts(arr, len - 1); //one element sorted, sort the remaining array
+       
+        String last = arr.get(len - 1); //last element of the array
+        int corrIndex = len - 2; //correct index of last element of the array
+       
+        while (corrIndex >= 0 && arr.get(corrIndex).compareTo(last) > 0) //find the correct index of the last element
+        { 
+            arr.set(corrIndex + 1, arr.get(corrIndex)); //shift section of sorted elements upwards by one element if correct index isn't found
+            corrIndex--; 
+        } 
+        arr.set(corrIndex + 1, last); //set the last element at its correct index
+        
+        return arr;
     }
 
     /**
@@ -107,7 +143,35 @@ public class HomePage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void accountsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountsBtnActionPerformed
-        JOptionPane.showMessageDialog(null, "Feature not added yet!", "Error", JOptionPane.ERROR_MESSAGE);   
+        ArrayList<String> accounts = new ArrayList<>();
+        ArrayList<String> passwords = new ArrayList<>();
+        String directoryPath = System.getProperty("user.dir"); // Gets project root
+        Path dir = Paths.get(directoryPath);
+        
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.txt")) {
+            for (Path file : stream) {
+                // Process each .txt file
+                String name = file.getFileName().toString();
+                name = name.substring(0, name.length() - 4);
+                accounts.add(name);
+                passwords.add(Files.readAllLines(file).get(0));
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+        accounts = SortAccounts(accounts, accounts.size());
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        for(int acc = 0; acc < accounts.size(); acc++){
+            panel.add(new JLabel(accounts.get(acc) + "; Password: " + passwords.get(acc)));
+        }
+        
+        dialog.add(panel);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
     }//GEN-LAST:event_accountsBtnActionPerformed
 
     private void newProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectBtnActionPerformed
