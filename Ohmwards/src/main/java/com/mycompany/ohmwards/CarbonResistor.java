@@ -14,9 +14,9 @@ public class CarbonResistor extends Resistor {
     
     private String colourCode;
     
-    public CarbonResistor(String colourCode, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(type, position, btn, voltage, current, resistance, power, name, direction);
-        this.colourCode = colourCode;
+    public CarbonResistor(Vector<Double> position, JButton btn) {
+        super(position, btn);
+        this.colourCode = "red red brown";
     }
     
     public void setColourCode(String newColourCode) {

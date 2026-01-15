@@ -12,9 +12,11 @@ import javax.swing.JButton;
  * @author Cameron
  */
 public class Relay extends PowerSupply {
+    private int voltsRequired;
     
-    public Relay(double voltageOut, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(voltageOut, type, position, btn, voltage, current, resistance, power, name, direction);
+    public Relay(double voltageOut, ConnectionType type, Vector<Double> position, JButton btn) {
+        super(position, btn);
+        this.voltsRequired = 5;
     }
     
     @Override

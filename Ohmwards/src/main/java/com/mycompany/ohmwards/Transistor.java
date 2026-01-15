@@ -15,8 +15,10 @@ public class Transistor extends Switch {
     private double voltageRequired;
     private double voltageOut;
     
-    public Transistor(double voltageRequired, double voltageOut, boolean electronFlow, boolean isClosed, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(electronFlow, isClosed, type, position, btn, voltage, current, resistance, power, name, direction);
+    public Transistor(Vector<Double> position, JButton btn) {
+        super(position, btn);
+        this.voltageRequired = 9;
+        this.voltageOut = 12;
     }
     
     public void setVoltageRequired(double newVoltageRequired) {

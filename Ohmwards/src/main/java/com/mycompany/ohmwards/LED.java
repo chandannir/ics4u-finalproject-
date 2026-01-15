@@ -14,10 +14,10 @@ public class LED extends Diode {
     private String colour;
     private boolean isEmitting;
 
-    public LED(String colour, boolean isEmitting, boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(electronFlow, diodeDirection, type, position, btn, voltage, current, resistance, power, name);
-        this.colour = colour;
-        this.isEmitting = isEmitting;
+    public LED(Vector<Double> position, JButton btn) {
+        super(position, btn);
+        this.colour = "Red";
+        this.isEmitting = false;
     }
     
     public String getColour() {

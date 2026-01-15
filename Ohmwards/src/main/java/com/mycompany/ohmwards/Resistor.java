@@ -12,18 +12,18 @@ import javax.swing.JButton;
  */
 public class Resistor extends Component {
     
-    private double resistance;
+    private int resistance;
     
-    public Resistor(ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(type, position, btn, voltage, current, resistance, power, name, direction);
-        this.resistance = resistance;
+    public Resistor(Vector<Double> position, JButton btn) {
+        super(ConnectionType.RESISTOR, position, btn);
+        this.resistance = 220;
     }
     
-    public void setResistance(double newResistance) {
+    public void setResistance(int newResistance) {
         this.resistance = newResistance;
     }
     
-    public double getResistance() {
+    public int getResistance() {
         return this.resistance;
     }
 }

@@ -11,16 +11,13 @@ import javax.swing.JButton;
  * @author Cameron
  */
 public class Wire extends Component {
-    private double powerLimit;
     private String colour;
     private int gauge;
 
-    public Wire(double powerLimit, String colour, int gauge, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(type, position, btn, voltage, current, resistance, power, name, direction);
-    }
-    
-    public double getPowerLimit() {
-        return powerLimit;
+    public Wire(Vector<Double> position, JButton btn) {
+        super(ConnectionType.WIRE, position, btn);
+        this.colour = "Red";
+        this.gauge = 12;
     }
     
     public String getColour() {
@@ -29,10 +26,6 @@ public class Wire extends Component {
     
     public int getGauge() {
         return gauge;
-    }
-    
-    public void setPowerLimit(double newPowerLimit) {
-        powerLimit = newPowerLimit;
     }
     
     public void setColour(String newColour) {

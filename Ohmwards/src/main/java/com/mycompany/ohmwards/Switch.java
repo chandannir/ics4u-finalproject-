@@ -15,8 +15,10 @@ public class Switch extends Component {
     private boolean electronFlow;
     private boolean isClosed;
     
-    public Switch(boolean electronFlow, boolean isClosed, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(type, position, btn, voltage, current, resistance, power, name, direction);
+    public Switch(Vector<Double> position, JButton btn) {
+        super(ConnectionType.SWITCH, position, btn);
+        this.electronFlow = false;
+        this.isClosed = false;
     }
     
     public void setElectronFlow(boolean newElectronFlow) {
