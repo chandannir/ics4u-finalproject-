@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -15,7 +17,7 @@ public class Servo extends Motor {
     private int degree;
     
     public Servo(Vector<Double> position, JButton btn) {
-        super(position, btn);
+        super(position, btn, new JLabel("Torque:"), new JLabel("Degree:"));
         this.degree = 180;
     }
     

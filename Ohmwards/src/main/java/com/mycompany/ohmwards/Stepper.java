@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -15,7 +17,7 @@ public class Stepper extends Motor {
     private double step;
     
     public Stepper(Vector<Double> position, JButton btn) {
-        super(position, btn);
+        super(position, btn, new JLabel("Torque:"), new JLabel("Step:"));
         this.step = 1.2;
     }
     

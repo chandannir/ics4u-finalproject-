@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -13,8 +15,8 @@ import javax.swing.JButton;
 public abstract class PowerSource extends Component{
     private double voltageOut;
 
-    public PowerSource(double voltageOut, ConnectionType type, Vector<Double> position, JButton btn) {
-        super(type, position, btn);
+    public PowerSource(double voltageOut, ConnectionType type, Vector<Double> position, JButton btn, JLabel lab1, JLabel lab2) {
+        super(type, position, btn, lab1, lab2);
         this.voltageOut = voltageOut;
     }
         

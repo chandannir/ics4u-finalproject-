@@ -6,17 +6,20 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
 public abstract class Motor extends Component {
+    private int torque;
     private boolean state;
     private boolean electronFlow;
     private double vIN;
 
-    public Motor(Vector<Double> position, JButton btn) {
-        super(ConnectionType.MODULE, position, btn);
+    public Motor(Vector<Double> position, JButton btn, JLabel lab1, JLabel lab2) {
+        super(ConnectionType.MODULE, position, btn, lab1, lab2);
         this.state = false;
         this.electronFlow = false;
         this.vIN = 5.0;

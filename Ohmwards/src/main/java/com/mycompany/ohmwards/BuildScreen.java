@@ -26,6 +26,8 @@ public class BuildScreen extends javax.swing.JFrame {
     private java.util.List<java.awt.Point> componentIntersections = new java.util.ArrayList<>();
     private java.util.Map<JButton, java.awt.Point[]> componentMap = new java.util.HashMap<>();
     
+    public Component comp;
+    
     /**
      * Creates new form BuildScreen
      */
@@ -381,61 +383,49 @@ public class BuildScreen extends javax.swing.JFrame {
                 componentMap.put(component, new java.awt.Point[]{p1, p2});
                 
                 switch(componentChoice.getSelectedItem()){
-                    case "Battery":
-                        component.setText("Battery");        
-                        Battery bat = new Battery(midPos, component);
-                        break;
-                    case "Carbon Resistor":
-                        component.setText("Carbon Resistor");
-                        CarbonResistor cRes = new CarbonResistor(midPos, component);
-                        break;
                     case "Resistor":
                         component.setText("Resistor");
-                        Resistor resistor = new Resistor(midPos, component);
+                        comp = new Resistor(midPos, component);
                         break;
                     case "DC Motor":
                         component.setText("DC Motor");
-                        DCMotor dcMot = new DCMotor(midPos, component);
+                        comp = new DCMotor(midPos, component);
                         break;
                     case "Servo Motor":
                         component.setText("Servo");
-                        Servo servo = new Servo(midPos, component);
+                        comp = new Servo(midPos, component);
                         break;
                     case "Stepper Motor":
                         component.setText("Stepper");
-                        Stepper stepper = new Stepper(midPos, component);
-                        break;
-                    case "Diode":
-                        component.setText("Diode");
-                        Diode diode = new Diode(midPos, component);
+                        comp = new Stepper(midPos, component);
                         break;
                     case "LED":
                         component.setText("LED");
-                        LED led = new LED(midPos, component);
+                        comp = new LED(midPos, component);
                         break;
                     case "Wire":
                         component.setText("Wire");
-                        Wire wire = new Wire(midPos, component);
+                        comp = new Wire(midPos, component);
                         break;
                     case "Voltage Regulator":
                         component.setText("Volt Reg");
-                        VoltageRegulator voltReg = new VoltageRegulator(midPos, component);
+                        comp = new VoltageRegulator(midPos, component);
                         break;
                     case "Transistor":
                         component.setText("Transistor");
-                        Transistor transistor = new Transistor(midPos, component);
+                        comp = new Transistor(midPos, component);
                         break;
                     case "Relay":
                         component.setText("Relay");
-                        Relay relay = new Relay(midPos, component);
+                        comp = new Relay(midPos, component);
                         break;
                     case "Switch":
                         component.setText("Switch");
-                        Switch sensor = new Switch(midPos, component);
+                        comp = new Switch(midPos, component);
                         break;
                     case "Power Supply":
                         component.setText("Power Supply");
-                        PowerSupply powerSupp = new PowerSupply(midPos, component);
+                        comp = new PowerSupply(midPos, component);
                         break;
                     default:
                         JOptionPane.showMessageDialog(null, "There was an error with the system!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -451,10 +441,14 @@ public class BuildScreen extends javax.swing.JFrame {
                         JButton deleteBtn = new JButton("Trash");
                         deleteBtn.setBackground(Color.RED);
                         deleteBtn.setForeground(Color.WHITE);
+                        JButton editBtn = new JButton("Edit");
+                        editBtn.setBackground(Color.GREEN);
+                        editBtn.setForeground(Color.WHITE);
                         
                         JPanel panel = new JPanel();
-                        panel.add(new JLabel("Colour:")); panel.add(field1);
-                        panel.add(new JLabel("Resistance:")); panel.add(field2);
+                        panel.add(comp.field1); panel.add(field1);
+                        panel.add(comp.field2); panel.add(field2);
+                        panel.add(editBtn);
                         panel.add(deleteBtn);
                         
                         componentDialog.add(panel);
@@ -473,6 +467,12 @@ public class BuildScreen extends javax.swing.JFrame {
                                 jPanel2.remove(component);
                                 componentDialog.dispose();
                                 jPanel2.repaint();
+                            }
+                        });
+                        
+                        editBtn.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                System.out.println("Edited...");
                             }
                         });
                         

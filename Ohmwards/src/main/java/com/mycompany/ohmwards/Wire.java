@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -15,7 +17,7 @@ public class Wire extends Component {
     private int gauge;
 
     public Wire(Vector<Double> position, JButton btn) {
-        super(ConnectionType.WIRE, position, btn);
+        super(ConnectionType.WIRE, position, btn, new JLabel("Colour:"), new JLabel("Gauge:"));
         this.colour = "Red";
         this.gauge = 12;
     }

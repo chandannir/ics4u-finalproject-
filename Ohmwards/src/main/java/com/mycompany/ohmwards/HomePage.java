@@ -175,8 +175,8 @@ public class HomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_accountsBtnActionPerformed
 
     private void newProjectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectBtnActionPerformed
-        BuildScreen build = new BuildScreen();
-        build.setVisible(true);
+        Ohmwards.build = new BuildScreen();
+        Ohmwards.build.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_newProjectBtnActionPerformed
 

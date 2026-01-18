@@ -6,20 +6,20 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  *
  * @author Cameron
  */
-public class Relay extends PowerSupply {
+public class Relay extends PowerSource {
     private int voltsRequired;
     
     public Relay(Vector<Double> position, JButton btn) {
-        super(position, btn);
-        this.voltsRequired = 5;
+        super(9, ConnectionType.POWERSOURCE, position, btn, new JLabel("Output:"), new JLabel("Required Vols:"));
+        this.voltsRequired = 12;
     }
     
-    @Override
     public void surge() {
     // TODO!
     }

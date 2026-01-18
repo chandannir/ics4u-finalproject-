@@ -6,17 +6,24 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
 public class Switch extends Component {
     
+    private String direction;
+    private String state;
+    
     private boolean electronFlow;
     private boolean isClosed;
     
     public Switch(Vector<Double> position, JButton btn) {
-        super(ConnectionType.SWITCH, position, btn);
+        super(ConnectionType.SWITCH, position, btn, new JLabel("Direction:"), new JLabel("State:"));
+        direction = "Up";
+        state = "false";
         this.electronFlow = false;
         this.isClosed = false;
     }

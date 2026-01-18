@@ -6,17 +6,21 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
-public class LED extends Diode {
+public class LED extends Component {
     private String colour;
+    private String direction;
     private boolean isEmitting;
 
     public LED(Vector<Double> position, JButton btn) {
-        super(position, btn);
+        super(ConnectionType.MODULE, position, btn, new JLabel("Direction:"), new JLabel("Colour"));
         this.colour = "Red";
+        this.direction = "Upwards";
         this.isEmitting = false;
     }
     

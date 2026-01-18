@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -13,10 +15,12 @@ import javax.swing.JButton;
 public class Resistor extends Component {
     
     private int resistance;
+    private String type;
     
     public Resistor(Vector<Double> position, JButton btn) {
-        super(ConnectionType.RESISTOR, position, btn);
+        super(ConnectionType.RESISTOR, position, btn, new JLabel("Resistance:"), new JLabel("Type / Code:"));
         this.resistance = 220;
+        this.type = "Carbon";
     }
     
     public void setResistance(int newResistance) {

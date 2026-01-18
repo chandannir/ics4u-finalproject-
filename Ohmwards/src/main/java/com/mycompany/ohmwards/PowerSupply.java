@@ -6,14 +6,18 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
 public class PowerSupply extends PowerSource {
+    private String brand;
     
     public PowerSupply(Vector<Double> position, JButton btn) {
-        super(9, ConnectionType.POWERSOURCE, position, btn);
+        super(9, ConnectionType.POWERSOURCE, position, btn, new JLabel("Voltage:"), new JLabel("Brand:"));
+        brand = "Microsoft";
     }
     
     public void surge() {

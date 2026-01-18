@@ -16,6 +16,7 @@ public class Ohmwards {
     public static MainMenu main;
     public static User currUser;
     public static Circuit circ;
+    public static BuildScreen build;
     
     public static void main(String[] args) {  
         addAccount("totallyRoland", "vergyIsStronger");
