@@ -181,33 +181,24 @@ public class SignUpScreen extends javax.swing.JFrame {
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_returnBtnActionPerformed
-
+    
+    // This lets the user sign up
     private void signupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signupBtnActionPerformed
+        // Chekcs if the fields are empty
         if(usernameField.getText().isBlank() || passwordField.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "Please fill out both fields...", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         else{
-            System.out.println(System.getProperty("user.dir"));
-            String directoryPath = System.getProperty("user.dir"); // Gets project root
-            Path dir = Paths.get(directoryPath);
-
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.txt")) {
-                for (Path file : stream) {
-                    // Process each .txt file
-                    if(file.getFileName().toString().contains(usernameField.getText().strip())){
-                        JOptionPane.showMessageDialog(null, "Account already exists, make a new account or login!", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-                
+            // Checks if the account alreay exists
+            if(Ohmwards.saveDatabase.findAccount(usernameField.getText().strip())){
+                JOptionPane.showMessageDialog(null, "Account already exists, make a new account or login!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
                 JOptionPane.showMessageDialog(this, "Account creation successfull, directing to main menu...", "Success!", JOptionPane.INFORMATION_MESSAGE);  
-                Ohmwards.addAccount(usernameField.getText().strip(), passwordField.getText().strip());
+                Ohmwards.saveDatabase.addAccount(usernameField.getText().strip(), passwordField.getText().strip());
                 MainMenu menu = new MainMenu();
                 menu.setVisible(true);
-                this.setVisible(false);
-                
-            } catch (IOException e) {
-                e.printStackTrace();
+                this.setVisible(false); 
             }
         }
     }//GEN-LAST:event_signupBtnActionPerformed

@@ -142,41 +142,34 @@ public class LoginScreen extends javax.swing.JFrame {
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_returnBtnActionPerformed
-
+    
+    // Here it checks the fields to get username and password after login button is pressed
+    // Then it will check to login the user
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         // Check if both fields are filled out
         if(usernameField.getText().isBlank() || passwordField.getText().isBlank()){
             JOptionPane.showMessageDialog(null, "Please fill out both fields...", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         else{
-            String directoryPath = System.getProperty("user.dir"); // Gets project root
-            Path dir = Paths.get(directoryPath);
-
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.txt")) {
-                for (Path file : stream) {
-                    // Process each .txt file
-                    if(file.getFileName().toString().contains(usernameField.getText().strip())){
-                        if (Files.readAllLines(file).get(0).equals(passwordField.getText().strip())) {
-                            ArrayList<Circuit> circuit = new ArrayList<>();
-                            // Add circuits to circuit (for later...)
+           // Checks if account exists
+           if(!Ohmwards.saveDatabase.findAccount(usernameField.getText().strip())) {
+                JOptionPane.showMessageDialog(null, "Account does not exist, Try again or create new account!", "Error", JOptionPane.ERROR_MESSAGE); 
+           } else if(Ohmwards.saveDatabase.verifyAccount(usernameField.getText().strip(),  passwordField.getText().strip())) { 
+                ArrayList<Circuit> circuit = new ArrayList<>();
+                // Add circuits to circuit (for later...)
                             
-                            User newUser = new User(usernameField.getText().strip(), passwordField.getText().strip(), circuit);
-                            Ohmwards.currUser = newUser;
-                            HomePage menu = new HomePage();
-                            menu.setVisible(true);
-                            this.setVisible(false);
-                            return;
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null, "Invalid password, try again...", "Error", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                User newUser = new User(usernameField.getText().strip(), passwordField.getText().strip(), circuit);
+                Ohmwards.currUser = newUser;
+                HomePage menu = new HomePage();
+                menu.setVisible(true);
+                this.setVisible(false);
+                return;
             }
-            JOptionPane.showMessageDialog(null, "Account does not exist, Try again or create new account!", "Error", JOptionPane.ERROR_MESSAGE); 
+            else{
+                JOptionPane.showMessageDialog(null, "Invalid password, try again...", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                    }
+                  }
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
