@@ -25,6 +25,22 @@ public class BuildScreen extends javax.swing.JFrame {
     private Vector<Integer> pos2 = new Vector<Integer>();
     private java.util.List<java.awt.Point> componentIntersections = new java.util.ArrayList<>();
     private java.util.Map<JButton, java.awt.Point[]> componentMap = new java.util.HashMap<>();
+    private java.awt.Point[] firstComponentIntersections = null;
+    private javax.swing.JTextField circuitCheckField;
+    
+    private static class ComponentNode {
+        JButton component;
+        java.awt.Point[] intersections;
+        ComponentNode next;
+        
+        ComponentNode(JButton component, java.awt.Point[] intersections) {
+            this.component = component;
+            this.intersections = intersections;
+            this.next = null;
+        }
+    }
+    
+    private ComponentNode circuitHead = null;
     
     private Component comp;
     private String fieldTxt1;
@@ -253,6 +269,12 @@ public class BuildScreen extends javax.swing.JFrame {
         powLabel.setForeground(new java.awt.Color(255, 255, 255));
         powLabel.setText("Power: ");
 
+        circuitCheckField = new javax.swing.JTextField();
+        circuitCheckField.setBackground(new java.awt.Color(51, 51, 51));
+        circuitCheckField.setForeground(new java.awt.Color(255, 255, 255));
+        circuitCheckField.setText("Circuit Type: Open");
+        circuitCheckField.setEditable(false);
+
         projectTitle.setText("Unknown #1");
 
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -284,7 +306,8 @@ public class BuildScreen extends javax.swing.JFrame {
                             .addComponent(powLabel)
                             .addComponent(resLabel)
                             .addComponent(curntLabel)
-                            .addComponent(voltLabel))
+                            .addComponent(voltLabel)
+                            .addComponent(circuitCheckField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 260, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -306,6 +329,8 @@ public class BuildScreen extends javax.swing.JFrame {
                             .addComponent(exitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(componentChoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(circuitCheckField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(voltLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(curntLabel)
@@ -380,6 +405,20 @@ public class BuildScreen extends javax.swing.JFrame {
                 jPanel2.setVisible(true); 
                 component.setVisible(true);
                 componentMap.put(component, new java.awt.Point[]{p1, p2});
+                
+                ComponentNode newNode = new ComponentNode(component, new java.awt.Point[]{p1, p2});
+                if (circuitHead == null) {
+                    circuitHead = newNode;
+                    firstComponentIntersections = new java.awt.Point[]{p1, p2};
+                } else {
+                    ComponentNode current = circuitHead;
+                    while (current.next != null) {
+                        current = current.next;
+                    }
+                    current.next = newNode;
+                }
+                
+                checkCircuitType();
                 
                 switch(componentChoice.getSelectedItem()){
                     case "Resistor":
@@ -495,11 +534,39 @@ public class BuildScreen extends javax.swing.JFrame {
                                     componentIntersections.remove(intersections[0]);
                                     componentIntersections.remove(intersections[1]);
                                     componentMap.remove(component);
+                                    
+                                    ComponentNode prev = null;
+                                    ComponentNode current = circuitHead;
+                                    while (current != null) {
+                                        if (current.component == component) {
+                                            if (prev == null) {
+                                                circuitHead = current.next;
+                                            } else {
+                                                prev.next = current.next;
+                                            }
+                                            break;
+                                        }
+                                        prev = current;
+                                        current = current.next;
+                                    }
+                                    
+                                    if (firstComponentIntersections != null && 
+                                        (intersections[0].equals(firstComponentIntersections[0]) || 
+                                         intersections[0].equals(firstComponentIntersections[1]) ||
+                                         intersections[1].equals(firstComponentIntersections[0]) || 
+                                         intersections[1].equals(firstComponentIntersections[1]))) {
+                                        if (circuitHead != null) {
+                                            firstComponentIntersections = circuitHead.intersections;
+                                        } else {
+                                            firstComponentIntersections = null;
+                                        }
+                                    }
                                 }
                                 component.setVisible(false);
                                 jPanel2.remove(component);
                                 componentDialog.dispose();
                                 jPanel2.repaint();
+                                checkCircuitType();
                             }
                         });
                         
@@ -522,9 +589,184 @@ public class BuildScreen extends javax.swing.JFrame {
     }
 
     private void choiceItemStateChanged(java.awt.event.ItemEvent evt){
-        // Reset positions
         pos1.clear();
         pos2.clear();
+    }
+    
+    private void checkCircuitType() {
+        if (circuitCheckField == null) {
+            return;
+        }
+        
+        if (componentMap.isEmpty()) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        java.awt.Point[] firstIntersections = null;
+        int minX = Integer.MAX_VALUE;
+        
+        for (java.util.Map.Entry<JButton, java.awt.Point[]> entry : componentMap.entrySet()) {
+            java.awt.Point[] inters = entry.getValue();
+            int compMinX = Math.min(inters[0].x, inters[1].x);
+            if (compMinX < minX) {
+                minX = compMinX;
+                firstIntersections = inters;
+            }
+        }
+        
+        if (firstIntersections == null) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        java.awt.Point firstSmallerX = firstIntersections[0].x < firstIntersections[1].x 
+            ? firstIntersections[0] 
+            : firstIntersections[1];
+        
+        boolean closed = false;
+        for (java.util.Map.Entry<JButton, java.awt.Point[]> entry : componentMap.entrySet()) {
+            java.awt.Point[] inters = entry.getValue();
+            if (inters == firstIntersections) {
+                continue;
+            }
+            if (firstSmallerX.equals(inters[0]) || firstSmallerX.equals(inters[1])) {
+                closed = true;
+                break;
+            }
+        }
+        
+        if (!closed) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        int verticalBranches = 0;
+        for (java.awt.Point[] inters : componentMap.values()) {
+            if (inters[0].y != inters[1].y) {
+                verticalBranches++;
+            }
+        }
+        
+        String circuitType = (verticalBranches > 2) ? "Closed, Parallel" : "Closed, Series";
+        circuitCheckField.setText(circuitType);
+    }
+    
+    private boolean isCircuitClosed(java.awt.Point firstSmallerX) {
+        if (circuitHead == null || circuitHead.next == null) {
+            return false;
+        }
+        
+        ComponentNode current = circuitHead.next;
+        while (current != null) {
+            java.awt.Point p1 = current.intersections[0];
+            java.awt.Point p2 = current.intersections[1];
+            
+            if (firstSmallerX.equals(p1) || firstSmallerX.equals(p2)) {
+                return true;
+            }
+            
+            current = current.next;
+        }
+        
+        return false;
+    }
+    
+    private java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> buildComponentGraph() {
+        java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = new java.util.HashMap<>();
+        
+        for (java.awt.Point[] intersections : componentMap.values()) {
+            java.awt.Point p1 = intersections[0];
+            java.awt.Point p2 = intersections[1];
+            
+            graph.putIfAbsent(p1, new java.util.HashSet<>());
+            graph.putIfAbsent(p2, new java.util.HashSet<>());
+            
+            graph.get(p1).add(p2);
+            graph.get(p2).add(p1);
+        }
+        
+        return graph;
+    }
+    
+    private boolean dfsPathExists(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph, 
+                                  java.awt.Point current, java.awt.Point target, 
+                                  java.util.Set<java.awt.Point> visited) {
+        if (current.equals(target)) {
+            return true;
+        }
+        
+        visited.add(current);
+        java.util.Set<java.awt.Point> neighbors = graph.get(current);
+        if (neighbors != null) {
+            for (java.awt.Point neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    if (dfsPathExists(graph, neighbor, target, visited)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private java.util.List<java.awt.Point> buildCircuitPath(java.awt.Point start, java.awt.Point end) {
+        java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = buildComponentGraph();
+        java.util.List<java.awt.Point> path = new java.util.ArrayList<>();
+        java.util.Set<java.awt.Point> visited = new java.util.HashSet<>();
+        
+        if (buildPath(graph, start, end, visited, path)) {
+            return path;
+        }
+        
+        return null;
+    }
+    
+    private boolean buildPath(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph,
+                             java.awt.Point current, java.awt.Point target,
+                             java.util.Set<java.awt.Point> visited,
+                             java.util.List<java.awt.Point> path) {
+        path.add(current);
+        
+        if (current.equals(target)) {
+            return true;
+        }
+        
+        visited.add(current);
+        java.util.Set<java.awt.Point> neighbors = graph.get(current);
+        if (neighbors != null) {
+            for (java.awt.Point neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    if (buildPath(graph, neighbor, target, visited, path)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        path.remove(path.size() - 1);
+        visited.remove(current);
+        return false;
+    }
+    
+    private int countYChanges(java.util.List<java.awt.Point> path) {
+        if (path.size() < 2) {
+            return 0;
+        }
+        
+        int yChanges = 0;
+        int lastY = path.get(0).y;
+        
+        for (int i = 1; i < path.size(); i++) {
+            int currentY = path.get(i).y;
+            if (currentY != lastY) {
+                yChanges++;
+                lastY = currentY;
+            }
+        }
+        
+        return yChanges;
     }
 
     /**
