@@ -3,7 +3,6 @@
  */
 
 package com.mycompany.ohmwards;
-import java.util.ArrayList;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,6 @@ public class Ohmwards {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(newAcc))) {
             writer.write(password);
             writer.newLine();
-            writer.write("[]");
         } catch (IOException ex) {
             Logger.getLogger(Ohmwards.class.getName()).log(Level.SEVERE, null, ex);
         }
