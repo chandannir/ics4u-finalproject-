@@ -157,10 +157,7 @@ public class LoginScreen extends javax.swing.JFrame {
                     // Process each .txt file
                     if(file.getFileName().toString().contains(usernameField.getText().strip())){
                         if (Files.readAllLines(file).get(0).equals(passwordField.getText().strip())) {
-                            ArrayList<Circuit> circuit = new ArrayList<>();
-                            // Add circuits to circuit (for later...)
-                            
-                            User newUser = new User(usernameField.getText().strip(), passwordField.getText().strip(), circuit);
+                            User newUser = new User(usernameField.getText().strip(), passwordField.getText().strip());
                             Ohmwards.currUser = newUser;
                             HomePage menu = new HomePage();
                             menu.setVisible(true);
