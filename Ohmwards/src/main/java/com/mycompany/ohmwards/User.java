@@ -12,15 +12,9 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private String password;
-    private ArrayList<Circuit> projects;
     
-    public User(String name, String password, ArrayList<Circuit> projects){
+    public User(String name, String password){
         this.name = name;
         this.password = password;
-        this.projects = projects;
-    }
-    
-    public ArrayList<Circuit> getProjects(){
-        return projects;
     }
 }
