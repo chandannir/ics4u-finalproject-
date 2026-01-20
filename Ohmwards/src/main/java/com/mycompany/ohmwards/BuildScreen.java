@@ -13,10 +13,7 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import java.awt.Color;
 
-/**
- *
- * @author Cameron
- */
+// Main build screen window for placing and analyzing circuit components.
 public class BuildScreen extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuildScreen.class.getName());
@@ -28,6 +25,7 @@ public class BuildScreen extends javax.swing.JFrame {
     private java.awt.Point[] firstComponentIntersections = null;
     private javax.swing.JTextField circuitCheckField;
     
+    // Node in a linked list representing a component and its grid intersections.
     private static class ComponentNode {
         JButton component;
         java.awt.Point[] intersections;
@@ -48,6 +46,7 @@ public class BuildScreen extends javax.swing.JFrame {
     private java.util.Map<JButton, Component> buttonComponentMap = new java.util.HashMap<>();
     private java.util.Map<JButton, String[]> buttonFieldTextMap = new java.util.HashMap<>();
     
+    // Recalculates and updates the total circuit values labels.
     private void updateCircuitTotals() {
         Calculations.CircuitType circuitType = Calculations.CircuitType.SERIES;
         if (circuitCheckField != null) {
@@ -63,9 +62,7 @@ public class BuildScreen extends javax.swing.JFrame {
         powLabel.setText(String.format("Power: %.2f W", result.getTotalPower()));
     }
     
-    /**
-     * Creates new form BuildScreen
-     */
+    // Constructs the build screen and wires up grid interaction.
     public BuildScreen() {
         initComponents();
         
@@ -108,60 +105,45 @@ public class BuildScreen extends javax.swing.JFrame {
         }
     }
     
-    /**
-     * Custom JPanel that displays a visual grid with dots at intersections
-     */
+    // Custom panel that draws the grid and intersection dots.
     private class GridPanel extends javax.swing.JPanel {
-        private static final double BASE_GRID_SIZE = 70;
+        private static final double GRID_SIZE = 70;
         private static final int DOT_SIZE = 8; 
         private static final int CLICK_TOLERANCE = 10;
-        private double zoomFactor = 1.0;
         private java.util.List<java.awt.Point> componentIntersections;
         
+        // Returns the fixed spacing between grid lines.
         public double getGridSize() {
-            return BASE_GRID_SIZE * zoomFactor;
+            return GRID_SIZE;
         }
         
-        public void setZoomFactor(double factor) {
-            zoomFactor = Math.max(0.5, Math.min(3.0, factor));
-            repaint();
-        }
-        
-        public double getZoomFactor() {
-            return zoomFactor;
-        }
-        
+        // Registers component intersection points to control which dots are visible.
         public void setComponentIntersections(java.util.List<java.awt.Point> intersections) {
             this.componentIntersections = intersections;
         } 
         
+        // Sets up the grid panel appearance.
         public GridPanel() {
             setBackground(new java.awt.Color(255, 255, 255));
             setOpaque(true);
             setFocusable(true);
-            
-            addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-                @Override
-                public void mouseWheelMoved(java.awt.event.MouseWheelEvent e) {
-                    double zoomDelta = e.getWheelRotation() < 0 ? 1.1 : 0.9;
-                    setZoomFactor(zoomFactor * zoomDelta);
-                }
-            });
         }
         
+        // Finds the nearest grid intersection within click tolerance.
         public java.awt.Point getIntersectionAt(int screenX, int screenY) {
             double gridSize = getGridSize();
             int gridX = (int) (Math.round(screenX / gridSize) * gridSize);
             int gridY = (int) (Math.round(screenY / gridSize) * gridSize);
             
             double distance = Math.sqrt(Math.pow(screenX - gridX, 2) + Math.pow(screenY - gridY, 2));
-            if (distance <= CLICK_TOLERANCE * zoomFactor) {
+            if (distance <= CLICK_TOLERANCE) {
                 return new java.awt.Point(gridX, gridY);
             }
             return null;
         }
         
         
+        // Converts a screen intersection point to grid (column,row) coordinates.
         public java.awt.Point getGridCoordinates(java.awt.Point intersection) {
             if (intersection == null) return null;
             double gridSize = getGridSize();
@@ -170,6 +152,7 @@ public class BuildScreen extends javax.swing.JFrame {
             return new java.awt.Point(col, row);
         }
         
+        // Determines if a dot should be visible at the given coordinates.
         public boolean isDotVisibleAt(double x, double y) {
             if (componentIntersections == null || componentIntersections.isEmpty()) {
                 return true;
@@ -185,6 +168,7 @@ public class BuildScreen extends javax.swing.JFrame {
             return false;
         }
         
+        // Paints the grid lines and visible dots.
         @Override
         protected void paintComponent(java.awt.Graphics g) {
             super.paintComponent(g);
@@ -258,6 +242,7 @@ public class BuildScreen extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Initializes all Swing components (NetBeans generated).
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -394,12 +379,14 @@ public class BuildScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Handles navigation back to the home page.
     private void exitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitBtnActionPerformed
         HomePage home = new HomePage();
         home.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_exitBtnActionPerformed
 
+    // Places a new component between two selected grid intersections.
     private void placeBtnActionPerformed(java.awt.event.ActionEvent evt){
         if(pos1.isEmpty() || pos2.isEmpty()){
             JOptionPane.showMessageDialog(null, "Both positions need to be selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -684,11 +671,13 @@ public class BuildScreen extends javax.swing.JFrame {
         pos2.clear();
     }
 
+    // Clears stored positions when the component type selection changes.
     private void choiceItemStateChanged(java.awt.event.ItemEvent evt){
         pos1.clear();
         pos2.clear();
     }
     
+    // Determines if the circuit is open, closed series, or closed parallel.
     private void checkCircuitType() {
         if (circuitCheckField == null) {
             return;
@@ -748,6 +737,7 @@ public class BuildScreen extends javax.swing.JFrame {
         circuitCheckField.setText(circuitType);
     }
     
+    // Checks whether the circuit is closed starting from the first component.
     private boolean isCircuitClosed(java.awt.Point firstSmallerX) {
         if (circuitHead == null || circuitHead.next == null) {
             return false;
@@ -768,6 +758,7 @@ public class BuildScreen extends javax.swing.JFrame {
         return false;
     }
     
+    // Builds an adjacency graph of intersections connected by components.
     private java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> buildComponentGraph() {
         java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = new java.util.HashMap<>();
         
@@ -785,6 +776,7 @@ public class BuildScreen extends javax.swing.JFrame {
         return graph;
     }
     
+    // Depth-first search to test if a path exists between two intersections.
     private boolean dfsPathExists(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph, 
                                   java.awt.Point current, java.awt.Point target, 
                                   java.util.Set<java.awt.Point> visited) {
@@ -807,6 +799,7 @@ public class BuildScreen extends javax.swing.JFrame {
         return false;
     }
     
+    // Attempts to build a full path of intersections between two points.
     private java.util.List<java.awt.Point> buildCircuitPath(java.awt.Point start, java.awt.Point end) {
         java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = buildComponentGraph();
         java.util.List<java.awt.Point> path = new java.util.ArrayList<>();
@@ -819,6 +812,7 @@ public class BuildScreen extends javax.swing.JFrame {
         return null;
     }
     
+    // Helper to recursively build a path between two intersections.
     private boolean buildPath(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph,
                              java.awt.Point current, java.awt.Point target,
                              java.util.Set<java.awt.Point> visited,
@@ -846,6 +840,7 @@ public class BuildScreen extends javax.swing.JFrame {
         return false;
     }
     
+    // Counts how many times the path changes vertical level (Y coordinate).
     private int countYChanges(java.util.List<java.awt.Point> path) {
         if (path.size() < 2) {
             return 0;
@@ -868,6 +863,7 @@ public class BuildScreen extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    // Application entry point; creates and shows the build screen.
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

@@ -1,21 +1,24 @@
-
+// Utility class for computing circuit totals and voltage drops.
 package com.mycompany.ohmwards;
 
 import java.util.Collection;
 
 public class Calculations {
 
+    // Indicates whether the circuit is treated as series or parallel for calculations.
     public enum CircuitType {
         SERIES,
         PARALLEL
     }
 
+    // Holds the aggregate results of circuit calculations.
     public static class Result {
         private final double totalVoltage;
         private final double totalResistance;
         private final double totalCurrent;
         private final double totalPower;
 
+        // Constructs a result with total voltage, resistance, current, and power.
         public Result(double totalVoltage, double totalResistance, double totalCurrent, double totalPower) {
             this.totalVoltage = totalVoltage;
             this.totalResistance = totalResistance;
@@ -23,27 +26,33 @@ public class Calculations {
             this.totalPower = totalPower;
         }
 
+        // Returns the total voltage of the circuit.
         public double getTotalVoltage() {
             return totalVoltage;
         }
 
+        // Returns the equivalent resistance of the circuit.
         public double getTotalResistance() {
             return totalResistance;
         }
 
+        // Returns the total current flowing in the circuit.
         public double getTotalCurrent() {
             return totalCurrent;
         }
 
+        // Returns the total power consumed by the circuit.
         public double getTotalPower() {
             return totalPower;
         }
     }
 
+    // Calculates totals assuming a series circuit by default.
     public static Result calculateTotals(Collection<Component> components) {
         return calculateTotals(components, CircuitType.SERIES);
     }
 
+    // Calculates voltage, resistance, current, and power for the given circuit type.
     public static Result calculateTotals(Collection<Component> components, CircuitType type) {
         double totalVoltage = 0.0;
         double seriesResistance = 0.0;
@@ -84,6 +93,7 @@ public class Calculations {
         return new Result(totalVoltage, totalResistance, totalCurrent, totalPower);
     }
 
+    // Calculates the voltage drop across a single component in the circuit.
     public static double calculateVoltageDrop(Component component, Collection<Component> allComponents, CircuitType type) {
         if (component == null || allComponents == null) {
             return 0.0;
