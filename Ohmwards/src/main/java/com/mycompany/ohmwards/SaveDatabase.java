@@ -27,8 +27,8 @@ public class SaveDatabase {
                 // Possibly encrypt passwords
                 var sql = "CREATE TABLE IF NOT EXISTS Users ("
                 + "	id INTEGER PRIMARY KEY,"
-                + "	username TEXT NOT NULL,"
-                + "	password TEXT NOT NULL"
+                + "	username TEXT NOT NULL UNIQUE,"
+                + "	password TEXT NOT NULL UNIQUE"
                 + ");";
                 
                 // Statment object to be able to add tables to database
@@ -58,6 +58,8 @@ public class SaveDatabase {
                 Instmnt.setString(1, username);
                 Instmnt.setString(2, password);
                 
+                Instmnt.executeUpdate();
+                
                 conn.close();
             }
         } catch (SQLException e) {
@@ -66,25 +68,28 @@ public class SaveDatabase {
         }
     }
     
-    // Checks if an account exists
-    // Returns true if the account exists
+    /// Checks if an account exists
+    /// Returns true if the account exist
+    /// @param username
+    /// @return 
     public boolean findAccount(String username) {
-        var sql = "SELECT name FROM Users";
+        String sql = "SELECT EXISTS(SELECT 1 FROM Users WHERE username = ?)";
 
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
-                var pstmt = conn.createStatement();
+                try (var preparedStatement = conn.prepareStatement(sql)) {
+                    preparedStatement.setString(1, username);
 
-                var rs = pstmt.executeQuery(sql);
-                
-                while (rs.next()) {
-                    if (rs.getString("name").contains(username)) {
-                        return true;
+                try (var resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        boolean exists = resultSet.getBoolean(1);
+                        return exists;
                     }
                 }
-                
-                conn.close();
             }
+                
+              conn.close();
+            }  
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.getMessage());
@@ -98,16 +103,15 @@ public class SaveDatabase {
     public boolean verifyAccount(String username, String password) {
         var sql = "SELECT password FROM Users WHERE username = ?";
 
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-               
-                var pstmt = conn.prepareStatement(sql);
+        try (var conn = DriverManager.getConnection(url)) {
+            if (conn != null) { 
+                var stmt = conn.prepareStatement(sql);
                 
-                pstmt.setString(1, username);
+                stmt.setString(1, username);
                 
-                var rs = pstmt.executeQuery(sql);
+                var rs = stmt.executeQuery();
                
-                if(rs.getString("password").contains(password)) {
+                if(rs.getString("password").equals(password)) {
                         return true;
                 }
                 
@@ -119,5 +123,5 @@ public class SaveDatabase {
         }
         
         return false;
-    }
+    }  
 }
