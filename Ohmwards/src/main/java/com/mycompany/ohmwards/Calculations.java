@@ -83,6 +83,39 @@ public class Calculations {
 
         return new Result(totalVoltage, totalResistance, totalCurrent, totalPower);
     }
+
+    public static double calculateVoltageDrop(Component component, Collection<Component> allComponents, CircuitType type) {
+        if (component == null || allComponents == null) {
+            return 0.0;
+        }
+
+        double totalVoltage = 0.0;
+        double totalResistance = 0.0;
+        double componentResistance = 0.0;
+
+        for (Component comp : allComponents) {
+            if (comp instanceof PowerSource) {
+                totalVoltage += ((PowerSource) comp).getVoltageOut();
+            }
+            if (comp instanceof Resistor) {
+                double r = ((Resistor) comp).getResistance();
+                totalResistance += r;
+                if (comp == component) {
+                    componentResistance = r;
+                }
+            }
+        }
+
+        if (type == CircuitType.PARALLEL) {
+            return totalVoltage;
+        } else {
+            if (totalResistance > 0.0 && componentResistance > 0.0) {
+                return (componentResistance / totalResistance) * totalVoltage;
+            }
+        }
+
+        return 0.0;
+    }
 }
 
 

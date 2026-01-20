@@ -553,6 +553,25 @@ public class BuildScreen extends javax.swing.JFrame {
                             panel.add(field1);
                             panel.add(field2);
                         }
+                        
+                        boolean isCircuitClosed = circuitCheckField != null && 
+                            circuitCheckField.getText() != null && 
+                            circuitCheckField.getText().toLowerCase().contains("closed");
+                        
+                        if (isCircuitClosed && thisComp instanceof Resistor) {
+                            Calculations.CircuitType circuitType = Calculations.CircuitType.SERIES;
+                            if (circuitCheckField.getText().toLowerCase().contains("parallel")) {
+                                circuitType = Calculations.CircuitType.PARALLEL;
+                            }
+                            double voltageDrop = Calculations.calculateVoltageDrop(
+                                thisComp, 
+                                buttonComponentMap.values(), 
+                                circuitType
+                            );
+                            JLabel voltageDropLabel = new JLabel(String.format("Voltage Drop: %.2f V", voltageDrop));
+                            panel.add(voltageDropLabel);
+                        }
+                        
                         panel.add(editBtn);
                         panel.add(deleteBtn);
                         
