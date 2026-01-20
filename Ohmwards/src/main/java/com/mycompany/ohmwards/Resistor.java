@@ -6,24 +6,34 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
 public class Resistor extends Component {
     
-    private double resistance;
+    private int resistance;
+    private String type;
     
-    public Resistor(ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(type, position, btn, voltage, current, resistance, power, name, direction);
-        this.resistance = resistance;
+    public Resistor(Vector<Double> position, JButton btn) {
+        super(ConnectionType.RESISTOR, position, btn, new JLabel("Resistance:"), new JLabel("Type / Code:"));
+        this.resistance = 220;
+        this.type = "Carbon";
     }
     
-    public void setResistance(double newResistance) {
+    public void setResistance(int newResistance) {
         this.resistance = newResistance;
     }
-    
-    public double getResistance() {
+    public int getResistance() {
         return this.resistance;
+    }
+    
+    public String getType(){
+        return type;
+    }
+    public void setType(String newType){
+        type = newType;
     }
 }

@@ -6,6 +6,8 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -13,9 +15,9 @@ import javax.swing.JButton;
 public class VoltageRegulator extends PowerSource {
     private double maxVoltage;
 
-    public VoltageRegulator(double maxVoltage, double voltageOut, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(voltageOut, type, position, btn, voltage, current, resistance, power, name, direction);
-        this.maxVoltage = maxVoltage;
+    public VoltageRegulator(Vector<Double> position, JButton btn) {
+        super(5, ConnectionType.POWERSOURCE, position, btn, new JLabel("Output Voltage:"), new JLabel("Max Voltage:"));
+        this.maxVoltage = 12;
     }
     
     public void setMaxVoltage(double newMaxVoltage) {

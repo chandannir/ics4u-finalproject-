@@ -6,17 +6,21 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
-public class Transistor extends Switch {
+public class Transistor extends Component {
     
     private double voltageRequired;
     private double voltageOut;
     
-    public Transistor(double voltageRequired, double voltageOut, boolean electronFlow, boolean isClosed, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(electronFlow, isClosed, type, position, btn, voltage, current, resistance, power, name, direction);
+    public Transistor(Vector<Double> position, JButton btn) {
+        super(ConnectionType.SWITCH, position, btn, new JLabel("Voltage Required:"), new JLabel("Voltage Out:"));
+        this.voltageRequired = 9;
+        this.voltageOut = 12;
     }
     
     public void setVoltageRequired(double newVoltageRequired) {

@@ -14,21 +14,24 @@ public class Circuit {
     private ArrayList<Component> components;
     private boolean state;
     
-    public Circuit(ArrayList<Component> comps, boolean state){
-        components = comps;
-        this.state = state;
+    public Circuit(){
+        components = new ArrayList<>();
+        this.state = false;
     }
     
-    public void addComponent(Component comp, Vector<Double> pos1, Vector<Double> pos2){
+    public ArrayList<Component> getComps(){
+        return components;
+    }
+    
+    public void addComponent(Component comp){
         // Add Code Here (add a comp to components list and set position to midpoint of pos1 and pos2)
+        components.add(comp);
+        System.out.println(components);
     }
     
     public void removeComponent(Component comp){
         // Remove comp from ArrayList and delete component from screen
-    }
-    
-    public void finishCircuit(){
-        // Check for missing wires and add if needed
+        components.remove(comp);
     }
     
     public boolean checkState(){

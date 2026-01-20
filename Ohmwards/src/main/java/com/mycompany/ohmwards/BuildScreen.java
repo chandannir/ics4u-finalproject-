@@ -25,12 +25,62 @@ public class BuildScreen extends javax.swing.JFrame {
     private Vector<Integer> pos2 = new Vector<Integer>();
     private java.util.List<java.awt.Point> componentIntersections = new java.util.ArrayList<>();
     private java.util.Map<JButton, java.awt.Point[]> componentMap = new java.util.HashMap<>();
+    private java.awt.Point[] firstComponentIntersections = null;
+    private javax.swing.JTextField circuitCheckField;
+    
+    private static class ComponentNode {
+        JButton component;
+        java.awt.Point[] intersections;
+        ComponentNode next;
+        
+        ComponentNode(JButton component, java.awt.Point[] intersections) {
+            this.component = component;
+            this.intersections = intersections;
+            this.next = null;
+        }
+    }
+    
+    private ComponentNode circuitHead = null;
+    
+    private Component comp;
+    private String fieldTxt1;
+    private String fieldTxt2;
+    private java.util.Map<JButton, Component> buttonComponentMap = new java.util.HashMap<>();
+    private java.util.Map<JButton, String[]> buttonFieldTextMap = new java.util.HashMap<>();
+    
+    private void updateCircuitTotals() {
+        Calculations.CircuitType circuitType = Calculations.CircuitType.SERIES;
+        if (circuitCheckField != null) {
+            String text = circuitCheckField.getText();
+            if (text != null && text.toLowerCase().contains("parallel")) {
+                circuitType = Calculations.CircuitType.PARALLEL;
+            }
+        }
+        Calculations.Result result = Calculations.calculateTotals(buttonComponentMap.values(), circuitType);
+        voltLabel.setText(String.format("Voltage: %.2f V", result.getTotalVoltage()));
+        resLabel.setText(String.format("Resistance: %.2f \u03a9", result.getTotalResistance()));
+        curntLabel.setText(String.format("Current: %.2f A", result.getTotalCurrent()));
+        powLabel.setText(String.format("Power: %.2f W", result.getTotalPower()));
+    }
     
     /**
      * Creates new form BuildScreen
      */
     public BuildScreen() {
         initComponents();
+        
+        // Component choices for application...
+        componentChoice.add("Resistor");
+        componentChoice.add("DC Motor");
+        componentChoice.add("Servo Motor");
+        componentChoice.add("Stepper Motor");
+        componentChoice.add("LED");
+        componentChoice.add("Wire");
+        componentChoice.add("Voltage Regulator");
+        componentChoice.add("Transistor");
+        componentChoice.add("Relay");
+        componentChoice.add("Switch");
+        componentChoice.add("Power Supply");
         
         if (jPanel2 instanceof GridPanel) {
             GridPanel gridPanel = (GridPanel) jPanel2;
@@ -229,12 +279,17 @@ public class BuildScreen extends javax.swing.JFrame {
 
         curntLabel.setForeground(new java.awt.Color(255, 255, 255));
         curntLabel.setText("Current: ");
-
         resLabel.setForeground(new java.awt.Color(255, 255, 255));
         resLabel.setText("Resistance: ");
 
         powLabel.setForeground(new java.awt.Color(255, 255, 255));
         powLabel.setText("Power: ");
+
+        circuitCheckField = new javax.swing.JTextField();
+        circuitCheckField.setBackground(new java.awt.Color(51, 51, 51));
+        circuitCheckField.setForeground(new java.awt.Color(255, 255, 255));
+        circuitCheckField.setText("Circuit Type: Open");
+        circuitCheckField.setEditable(false);
 
         projectTitle.setText("Unknown #1");
 
@@ -267,7 +322,8 @@ public class BuildScreen extends javax.swing.JFrame {
                             .addComponent(powLabel)
                             .addComponent(resLabel)
                             .addComponent(curntLabel)
-                            .addComponent(voltLabel))
+                            .addComponent(voltLabel)
+                            .addComponent(circuitCheckField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 260, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -289,6 +345,8 @@ public class BuildScreen extends javax.swing.JFrame {
                             .addComponent(exitBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(componentChoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(circuitCheckField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(voltLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(curntLabel)
@@ -346,8 +404,12 @@ public class BuildScreen extends javax.swing.JFrame {
                     return;
                 }
                 
-                double minX = (pos1.get(0) + pos2.get(0)) / 2.0;
-                double minY = (pos1.get(1) + pos2.get(1)) / 2.0;
+                double midX = (pos1.get(0) + pos2.get(0)) / 2.0;
+                double midY = (pos1.get(1) + pos2.get(1)) / 2.0;
+                
+                Vector<Double> midPos = new Vector<>();
+                midPos.add(midX);
+                midPos.add(midY);
                 
                 componentIntersections.add(p1);
                 componentIntersections.add(p2);
@@ -355,30 +417,170 @@ public class BuildScreen extends javax.swing.JFrame {
                 jPanel2.setLayout(null);
                 JButton component = new JButton("Component");
                 jPanel2.add(component);
-                component.setBounds((int) minX - 35, (int) minY - 15, 70, 30);
+                component.setBounds((int) midX - 35, (int) midY - 15, 70, 30);
                 jPanel2.setVisible(true); 
                 component.setVisible(true);
-                
                 componentMap.put(component, new java.awt.Point[]{p1, p2});
+                
+                ComponentNode newNode = new ComponentNode(component, new java.awt.Point[]{p1, p2});
+                if (circuitHead == null) {
+                    circuitHead = newNode;
+                    firstComponentIntersections = new java.awt.Point[]{p1, p2};
+                } else {
+                    ComponentNode current = circuitHead;
+                    while (current.next != null) {
+                        current = current.next;
+                    }
+                    current.next = newNode;
+                }
+                
+                checkCircuitType();
+                updateCircuitTotals();
+                
+                switch(componentChoice.getSelectedItem()){
+                    case "Resistor":
+                        component.setText("Resistor");
+                        Resistor res = new Resistor(midPos, component);
+                        fieldTxt1 = Integer.toString(res.getResistance());
+                        fieldTxt2 = res.getType();
+                        comp = res;
+                        break;
+                    case "DC Motor":
+                        component.setText("DC Motor");
+                        DCMotor mot = new DCMotor(midPos, component);
+                        fieldTxt1 = Integer.toString(mot.getTorque());
+                        fieldTxt2 = Integer.toString(mot.getRPM());
+                        comp = mot;
+                        break;
+                    case "Servo Motor":
+                        component.setText("Servo");
+                        Servo servoMot = new Servo(midPos, component);
+                        fieldTxt1 = Integer.toString(servoMot.getTorque());
+                        fieldTxt2 = Integer.toString(servoMot.getDegree());
+                        comp = servoMot;
+                        break;
+                    case "Stepper Motor":
+                        component.setText("Stepper");
+                        Stepper stepMot = new Stepper(midPos, component);
+                        fieldTxt1 = Integer.toString(stepMot.getTorque());
+                        fieldTxt2 = Double.toString(stepMot.getStep());
+                        comp = stepMot;
+                        break;
+                    case "LED":
+                        component.setText("LED");
+                        LED led = new LED(midPos, component);
+                        fieldTxt1 = led.getDirection();
+                        fieldTxt2 = led.getColour();
+                        comp = led;
+                        break;
+                    case "Wire":
+                        component.setText("Wire");
+                        Wire wire = new Wire(midPos, component);
+                        fieldTxt1 = wire.getColour();
+                        fieldTxt2 = Integer.toString(wire.getGauge());
+                        comp = wire;
+                        break;
+                    case "Voltage Regulator":
+                        component.setText("Volt Reg");
+                        VoltageRegulator vt = new VoltageRegulator(midPos, component);
+                        fieldTxt1 = Double.toString(vt.getVoltageOut());
+                        fieldTxt2 = Double.toString(vt.getMaxVoltage());
+                        comp = vt;
+                        break;
+                    case "Transistor":
+                        component.setText("Transistor");
+                        Transistor transistor = new Transistor(midPos, component);
+                        fieldTxt1 = Double.toString(transistor.getVoltageRequired());
+                        fieldTxt2 = Double.toString(transistor.getVoltageOut());
+                        comp = transistor;
+                        break;
+                    case "Relay":
+                        component.setText("Relay");
+                        Relay relay = new Relay(midPos, component);
+                        fieldTxt1 = Double.toString(relay.getVoltageOut());
+                        fieldTxt2 = Double.toString(relay.getVoltsRequired());
+                        comp = relay;
+                        break;
+                    case "Switch":
+                        component.setText("Switch");
+                        Switch switchComp = new Switch(midPos, component);
+                        fieldTxt1 = switchComp.getDirection();
+                        fieldTxt2 = switchComp.getState();
+                        comp = switchComp;
+                        break;
+                    case "Power Supply":
+                        component.setText("Power Supply");
+                        PowerSupply powerSupp = new PowerSupply(midPos, component);
+                        fieldTxt1 = Double.toString(powerSupp.getVoltageOut());
+                        fieldTxt2 = powerSupp.getBrand();
+                        comp = powerSupp;
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "There was an error with the system!", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
+                
+                if (comp != null) {
+                    buttonComponentMap.put(component, comp);
+                    buttonFieldTextMap.put(component, new String[]{fieldTxt1, fieldTxt2});
+                }
                 
                 component.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         JDialog componentDialog = new JDialog(BuildScreen.this, "Component", true);
                         componentDialog.setLayout(new FlowLayout());
+                        Component thisComp = buttonComponentMap.get(component);
+                        String[] texts = buttonFieldTextMap.get(component);
+                        String localField1 = texts != null ? texts[0] : "";
+                        String localField2 = texts != null ? texts[1] : "";
+                        
                         JTextField field1 = new JTextField(10);
+                        field1.setText(localField1);
                         JTextField field2 = new JTextField(10);
+                        field2.setText(localField2);
                         JButton deleteBtn = new JButton("Trash");
                         deleteBtn.setBackground(Color.RED);
                         deleteBtn.setForeground(Color.WHITE);
+                        JButton editBtn = new JButton("Edit");
+                        editBtn.setBackground(Color.GREEN);
+                        editBtn.setForeground(Color.WHITE);
                         
                         JPanel panel = new JPanel();
-                        panel.add(new JLabel("Colour:")); panel.add(field1);
-                        panel.add(new JLabel("Resistance:")); panel.add(field2);
+                        if (thisComp != null) {
+                            panel.add(thisComp.field1); panel.add(field1);
+                            panel.add(thisComp.field2); panel.add(field2);
+                        } else {
+                            panel.add(field1);
+                            panel.add(field2);
+                        }
+                        panel.add(editBtn);
                         panel.add(deleteBtn);
                         
                         componentDialog.add(panel);
                         componentDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                         componentDialog.pack();
+                        
+                        editBtn.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                String newField1 = field1.getText();
+                                String newField2 = field2.getText();
+                                
+                                if (thisComp != null) {
+                                    try {
+                                        if (thisComp instanceof Resistor) {
+                                            ((Resistor) thisComp).setResistance(Integer.parseInt(newField1));
+                                        } else if (thisComp instanceof PowerSource) {
+                                            ((PowerSource) thisComp).setVoltageOut(Double.parseDouble(newField1));
+                                        }
+                                    } catch (NumberFormatException ignore) {
+                                        
+                                    }
+                                }
+                                
+                                buttonFieldTextMap.put(component, new String[]{newField1, newField2});
+                                updateCircuitTotals();
+                            }
+                        });
                         
                         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
                             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -387,11 +589,48 @@ public class BuildScreen extends javax.swing.JFrame {
                                     componentIntersections.remove(intersections[0]);
                                     componentIntersections.remove(intersections[1]);
                                     componentMap.remove(component);
+                                    buttonComponentMap.remove(component);
+                                    buttonFieldTextMap.remove(component);
+                                    
+                                    ComponentNode prev = null;
+                                    ComponentNode current = circuitHead;
+                                    while (current != null) {
+                                        if (current.component == component) {
+                                            if (prev == null) {
+                                                circuitHead = current.next;
+                                            } else {
+                                                prev.next = current.next;
+                                            }
+                                            break;
+                                        }
+                                        prev = current;
+                                        current = current.next;
+                                    }
+                                    
+                                    if (firstComponentIntersections != null && 
+                                        (intersections[0].equals(firstComponentIntersections[0]) || 
+                                         intersections[0].equals(firstComponentIntersections[1]) ||
+                                         intersections[1].equals(firstComponentIntersections[0]) || 
+                                         intersections[1].equals(firstComponentIntersections[1]))) {
+                                        if (circuitHead != null) {
+                                            firstComponentIntersections = circuitHead.intersections;
+                                        } else {
+                                            firstComponentIntersections = null;
+                                        }
+                                    }
                                 }
                                 component.setVisible(false);
                                 jPanel2.remove(component);
                                 componentDialog.dispose();
                                 jPanel2.repaint();
+                                checkCircuitType();
+                                updateCircuitTotals();
+                            }
+                        });
+                        
+                        editBtn.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                System.out.println("Edited...");
                             }
                         });
                         
@@ -408,9 +647,184 @@ public class BuildScreen extends javax.swing.JFrame {
     }
 
     private void choiceItemStateChanged(java.awt.event.ItemEvent evt){
-        // Reset positions
         pos1.clear();
         pos2.clear();
+    }
+    
+    private void checkCircuitType() {
+        if (circuitCheckField == null) {
+            return;
+        }
+        
+        if (componentMap.isEmpty()) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        java.awt.Point[] firstIntersections = null;
+        int minX = Integer.MAX_VALUE;
+        
+        for (java.util.Map.Entry<JButton, java.awt.Point[]> entry : componentMap.entrySet()) {
+            java.awt.Point[] inters = entry.getValue();
+            int compMinX = Math.min(inters[0].x, inters[1].x);
+            if (compMinX < minX) {
+                minX = compMinX;
+                firstIntersections = inters;
+            }
+        }
+        
+        if (firstIntersections == null) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        java.awt.Point firstSmallerX = firstIntersections[0].x < firstIntersections[1].x 
+            ? firstIntersections[0] 
+            : firstIntersections[1];
+        
+        boolean closed = false;
+        for (java.util.Map.Entry<JButton, java.awt.Point[]> entry : componentMap.entrySet()) {
+            java.awt.Point[] inters = entry.getValue();
+            if (inters == firstIntersections) {
+                continue;
+            }
+            if (firstSmallerX.equals(inters[0]) || firstSmallerX.equals(inters[1])) {
+                closed = true;
+                break;
+            }
+        }
+        
+        if (!closed) {
+            circuitCheckField.setText("Open");
+            return;
+        }
+        
+        int verticalBranches = 0;
+        for (java.awt.Point[] inters : componentMap.values()) {
+            if (inters[0].y != inters[1].y) {
+                verticalBranches++;
+            }
+        }
+        
+        String circuitType = (verticalBranches > 2) ? "Closed, Parallel" : "Closed, Series";
+        circuitCheckField.setText(circuitType);
+    }
+    
+    private boolean isCircuitClosed(java.awt.Point firstSmallerX) {
+        if (circuitHead == null || circuitHead.next == null) {
+            return false;
+        }
+        
+        ComponentNode current = circuitHead.next;
+        while (current != null) {
+            java.awt.Point p1 = current.intersections[0];
+            java.awt.Point p2 = current.intersections[1];
+            
+            if (firstSmallerX.equals(p1) || firstSmallerX.equals(p2)) {
+                return true;
+            }
+            
+            current = current.next;
+        }
+        
+        return false;
+    }
+    
+    private java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> buildComponentGraph() {
+        java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = new java.util.HashMap<>();
+        
+        for (java.awt.Point[] intersections : componentMap.values()) {
+            java.awt.Point p1 = intersections[0];
+            java.awt.Point p2 = intersections[1];
+            
+            graph.putIfAbsent(p1, new java.util.HashSet<>());
+            graph.putIfAbsent(p2, new java.util.HashSet<>());
+            
+            graph.get(p1).add(p2);
+            graph.get(p2).add(p1);
+        }
+        
+        return graph;
+    }
+    
+    private boolean dfsPathExists(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph, 
+                                  java.awt.Point current, java.awt.Point target, 
+                                  java.util.Set<java.awt.Point> visited) {
+        if (current.equals(target)) {
+            return true;
+        }
+        
+        visited.add(current);
+        java.util.Set<java.awt.Point> neighbors = graph.get(current);
+        if (neighbors != null) {
+            for (java.awt.Point neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    if (dfsPathExists(graph, neighbor, target, visited)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private java.util.List<java.awt.Point> buildCircuitPath(java.awt.Point start, java.awt.Point end) {
+        java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph = buildComponentGraph();
+        java.util.List<java.awt.Point> path = new java.util.ArrayList<>();
+        java.util.Set<java.awt.Point> visited = new java.util.HashSet<>();
+        
+        if (buildPath(graph, start, end, visited, path)) {
+            return path;
+        }
+        
+        return null;
+    }
+    
+    private boolean buildPath(java.util.Map<java.awt.Point, java.util.Set<java.awt.Point>> graph,
+                             java.awt.Point current, java.awt.Point target,
+                             java.util.Set<java.awt.Point> visited,
+                             java.util.List<java.awt.Point> path) {
+        path.add(current);
+        
+        if (current.equals(target)) {
+            return true;
+        }
+        
+        visited.add(current);
+        java.util.Set<java.awt.Point> neighbors = graph.get(current);
+        if (neighbors != null) {
+            for (java.awt.Point neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    if (buildPath(graph, neighbor, target, visited, path)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        path.remove(path.size() - 1);
+        visited.remove(current);
+        return false;
+    }
+    
+    private int countYChanges(java.util.List<java.awt.Point> path) {
+        if (path.size() < 2) {
+            return 0;
+        }
+        
+        int yChanges = 0;
+        int lastY = path.get(0).y;
+        
+        for (int i = 1; i < path.size(); i++) {
+            int currentY = path.get(i).y;
+            if (currentY != lastY) {
+                yChanges++;
+                lastY = currentY;
+            }
+        }
+        
+        return yChanges;
     }
 
     /**

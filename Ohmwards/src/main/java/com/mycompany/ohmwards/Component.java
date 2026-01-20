@@ -5,6 +5,8 @@
 package com.mycompany.ohmwards;
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
@@ -17,25 +19,23 @@ public abstract class Component {
     private double current;
     private double resistance;
     private double power;
-    private String name;
-    private Direction direction;
     
-    public Component(ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction)
+    public JLabel field1;
+    public JLabel field2;
+    
+    public Component(ConnectionType type, Vector<Double> position, JButton btn, JLabel field1, JLabel field2)
     {
         this.type = type;
         this.position = position;
         compBtn = btn;
-        this.voltage = voltage;
-        this.current = current;
-        this.resistance = resistance;
-        this.power = power;
-        this.name = name;
-        this.direction = direction;
+        
+        this.field1 = field1;
+        this.field2 = field2;
+        
+        Ohmwards.circ.addComponent(this);
     }
     
     // Getters + Setters
-    
-    public void displayPopup(){
-        // Display the info and stuff in a popup menu on click
-    }
+     
+    // Calculate values
 }

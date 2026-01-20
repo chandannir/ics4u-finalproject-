@@ -6,38 +6,35 @@ package com.mycompany.ohmwards;
 
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Cameron
  */
-public class LED extends Diode {
+public class LED extends Component {
     private String colour;
-    private boolean isEmitting;
+    private String direction;
 
-    public LED(String colour, boolean isEmitting, boolean electronFlow, Direction diodeDirection, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(electronFlow, diodeDirection, type, position, btn, voltage, current, resistance, power, name);
-        this.colour = colour;
-        this.isEmitting = isEmitting;
+    public LED(Vector<Double> position, JButton btn) {
+        super(ConnectionType.MODULE, position, btn, new JLabel("Direction:"), new JLabel("Colour"));
+        this.colour = "Red";
+        this.direction = "Upwards";
     }
     
     public String getColour() {
         return this.colour;
     }
     
-    public boolean isEmitting() {
-        return this.isEmitting;
+    public String getDirection() {
+        return direction;
     }
     
     public void setColour(String newColour) {
         this.colour = newColour;
     }
     
-    public void setIsEmitting(boolean newIsEmitting) {
-        this.isEmitting = newIsEmitting;
-    }
-    
-    // Figure out what this will do when grid is set up
-    public void emit() {
-        // TODO
+    public void setDirection(String newDirection) {
+        direction = newDirection;
     }
 }

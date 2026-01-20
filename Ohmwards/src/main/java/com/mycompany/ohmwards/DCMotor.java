@@ -5,6 +5,7 @@
 package com.mycompany.ohmwards;
 import javax.swing.JButton;
 import java.util.Vector;
+import javax.swing.JLabel;
 
 /**
  *
@@ -14,9 +15,9 @@ public class DCMotor extends Motor {
     
     private int rpm;
     
-    public DCMotor(int rpm, boolean state, boolean electronFlow, double vIN, ConnectionType type, Vector<Double> position, JButton btn, double voltage, double current, double resistance, double power, String name, Direction direction) {
-        super(state, electronFlow, vIN, type, position, btn, voltage, current, resistance, power, name, direction);
-        this.rpm = rpm;
+    public DCMotor(Vector<Double> position, JButton btn) {
+        super(position, btn, new JLabel("Torque:"), new JLabel("RPM:"));
+        this.rpm = 50;
     }
     
     public int getRPM() {
